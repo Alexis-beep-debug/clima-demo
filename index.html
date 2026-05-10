@@ -41,6 +41,10 @@
                         DEFAULT: '#ede8e1',
                         subtle: '#f5f1eb',
                     },
+                    danger: {
+                        DEFAULT: '#c4421a',
+                        light: '#fef0ec',
+                    },
                 },
                 fontFamily: {
                     display: ['"Bricolage Grotesque"', 'serif'],
@@ -197,10 +201,10 @@
             </button>
             <div class="flex items-center gap-3 px-3 py-3">
                 <div class="w-8 h-8 rounded-full bg-clima-orange/20 flex items-center justify-center">
-                    <span class="text-clima-orange font-semibold text-xs">AP</span>
+                    <span class="text-clima-orange font-semibold text-xs">ML</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <div class="text-sm font-medium text-ink-inverse truncate">Admin</div>
+                    <div class="text-sm font-medium text-ink-inverse truncate">Markus Lehmann</div>
                     <div class="text-[11px] text-ink-tertiary truncate">Geschäftsführung</div>
                 </div>
                 <i data-lucide="log-out" class="w-4 h-4 text-ink-tertiary cursor-pointer hover:text-ink-inverse transition-colors"></i>
@@ -241,8 +245,8 @@
                 <!-- Welcome + Date -->
                 <div class="flex items-end justify-between mb-8 stagger" style="animation-delay: 0.05s">
                     <div>
-                        <p class="text-ink-secondary text-sm mb-1">Samstag, 10. Mai 2026</p>
-                        <h2 class="font-display text-2xl font-bold text-ink">Guten Tag, Admin</h2>
+                        <p class="text-ink-secondary text-sm mb-1" id="dashboard-date"></p>
+                        <h2 class="font-display text-[28px] font-bold text-ink leading-tight" id="dashboard-greeting"></h2>
                     </div>
                     <button class="btn-primary bg-clima-orange text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
@@ -444,10 +448,10 @@
                                     <span class="text-sm text-ink">Treppenhausreinigung</span>
                                     <span class="text-xs text-ink-tertiary font-medium">24 Objekte</span>
                                 </div>
-                                <div class="h-2 bg-page rounded-full overflow-hidden">
-                                    <div class="h-full bg-clima-orange rounded-full" style="width: 82%"></div>
+                                <div class="h-2.5 bg-page rounded-full overflow-hidden">
+                                    <div class="h-full bg-danger rounded-full" style="width: 82%"></div>
                                 </div>
-                                <div class="text-[11px] text-clima-orange mt-1">82% Erfüllungsquote</div>
+                                <div class="text-[11px] text-danger font-medium mt-1">82% Erfüllungsquote — unter Ziel</div>
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-1.5">
@@ -885,9 +889,9 @@
                                 <td class="py-3.5 px-5 font-medium text-ink">#2026-045</td>
                                 <td class="py-3.5 px-5 text-ink-secondary">WohnBau AG</td>
                                 <td class="py-3.5 px-5 text-ink-secondary">Fensterreinigung</td>
-                                <td class="py-3.5 px-5 text-red-600 font-medium tabular-nums">08.05.2026</td>
+                                <td class="py-3.5 px-5 text-danger font-medium tabular-nums">08.05.2026</td>
                                 <td class="py-3.5 px-5 text-ink-secondary">Team D</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-full">Überfällig</span></td>
+                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-danger bg-danger-light px-2.5 py-1 rounded-full">Überfällig</span></td>
                             </tr>
                             <tr class="table-row border-b border-border-subtle">
                                 <td class="py-3.5 px-5 font-medium text-ink">#2026-044</td>
@@ -1178,8 +1182,8 @@
                                 <td class="py-3.5 px-5 text-ink-secondary">Dr. med. Weber</td>
                                 <td class="py-3.5 px-5 text-ink-secondary tabular-nums">April 2026</td>
                                 <td class="py-3.5 px-5 text-right font-medium text-ink tabular-nums">€1.200,00</td>
-                                <td class="py-3.5 px-5 text-red-600 font-medium tabular-nums">01.05.2026</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 bg-red-50 px-2.5 py-1 rounded-full">Überfällig</span></td>
+                                <td class="py-3.5 px-5 text-danger font-medium tabular-nums">01.05.2026</td>
+                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-danger bg-danger-light px-2.5 py-1 rounded-full">Überfällig</span></td>
                             </tr>
                             <tr class="table-row">
                                 <td class="py-3.5 px-5 font-medium text-ink tabular-nums">#R-2026-087</td>
@@ -1299,6 +1303,19 @@
 
 <!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════════ -->
 <script>
+    // Dynamic date + greeting
+    (function() {
+        const now = new Date();
+        const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+        const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+        const dateEl = document.getElementById('dashboard-date');
+        const greetEl = document.getElementById('dashboard-greeting');
+        if (dateEl) dateEl.textContent = days[now.getDay()] + ', ' + now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+        const h = now.getHours();
+        const greet = h < 12 ? 'Guten Morgen' : h < 17 ? 'Guten Tag' : 'Guten Abend';
+        if (greetEl) greetEl.textContent = greet + ', Markus';
+    })();
+
     // Initialize Lucide icons
     lucide.createIcons();
 
@@ -1415,7 +1432,7 @@
                 labels: ['Büroreinigung', 'Hotelreinigung', 'Praxisreinigung', 'Treppenhausreinigung', 'Sonstiges'],
                 datasets: [{
                     data: [38, 25, 15, 14, 8],
-                    backgroundColor: ['#fb8e28', '#82b735', '#e47d1e', '#a89880', '#ede8e1'],
+                    backgroundColor: ['#fb8e28', '#82b735', '#e47d1e', '#c4421a', '#7a6a58'],
                     borderWidth: 0,
                     borderRadius: 4,
                     spacing: 3,

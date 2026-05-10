@@ -242,226 +242,180 @@
             <!-- ══════════════ VIEW: DASHBOARD ══════════════ -->
             <div id="view-dashboard" class="view">
 
-                <!-- Welcome + Date -->
-                <div class="flex items-end justify-between mb-8 stagger" style="animation-delay: 0.05s">
-                    <div>
-                        <p class="text-ink-secondary text-sm mb-1" id="dashboard-date"></p>
-                        <h2 class="font-display text-[28px] font-bold text-ink leading-tight" id="dashboard-greeting"></h2>
+                <!-- Hero Header with KPIs -->
+                <div class="bg-surface rounded-2xl border border-border p-6 pb-5 mb-5 stagger" style="animation-delay: 0.05s">
+                    <div class="flex items-start justify-between mb-5">
+                        <div>
+                            <p class="text-ink-tertiary text-xs mb-0.5" id="dashboard-date"></p>
+                            <h2 class="font-display text-xl font-bold text-ink leading-tight" id="dashboard-greeting"></h2>
+                        </div>
+                        <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Neuer Auftrag
+                        </button>
                     </div>
-                    <button class="btn-primary bg-clima-orange text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        Neuer Auftrag
-                    </button>
-                </div>
-
-                <!-- KPI Metrics — asymmetric layout -->
-                <div class="flex items-stretch gap-6 mb-10 stagger" style="animation-delay: 0.1s">
-                    <!-- Featured metric -->
-                    <div class="flex-none">
-                        <div class="text-ink-secondary text-sm font-medium mb-1">Monatsumsatz</div>
-                        <div class="font-display text-4xl font-bold text-ink tracking-tight">€47.850</div>
-                        <div class="flex items-center gap-2 mt-1.5">
-                            <span class="inline-flex items-center gap-1 text-clima-green text-xs font-semibold bg-clima-green-light px-2 py-0.5 rounded-full">
-                                <i data-lucide="trending-up" class="w-3 h-3"></i>
-                                +12,3%
-                            </span>
-                            <span class="text-ink-tertiary text-xs">vs. €42.600</span>
-                        </div>
-                    </div>
-                    <!-- Divider -->
-                    <div class="w-px bg-border self-stretch"></div>
-                    <!-- Secondary metrics inline -->
-                    <div class="flex-1 flex items-center gap-10">
-                        <div>
-                            <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Offene Posten</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">€34.200</div>
-                            <span class="text-clima-orange text-xs font-medium">12 offen</span>
-                        </div>
-                        <div>
-                            <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Aufträge</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">23</div>
-                            <span class="text-clima-orange text-xs font-medium">5 überfällig</span>
-                        </div>
-                        <div>
-                            <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Teams aktiv</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">8<span class="text-ink-tertiary text-lg font-normal"> / 10</span></div>
-                            <span class="inline-flex items-center gap-1 text-clima-green text-xs font-medium"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>36 im Einsatz</span>
-                        </div>
-                        <div>
-                            <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Objekte</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">84</div>
-                            <span class="text-clima-green text-xs font-medium">+3 neu</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart + Schedule Row -->
-                <div class="grid grid-cols-5 gap-5 mb-8">
-                    <!-- Revenue Chart -->
-                    <div class="col-span-3 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.15s">
-                        <div class="flex items-center justify-between mb-5">
-                            <h3 class="font-display font-semibold text-base text-ink">Umsatzentwicklung</h3>
-                            <div class="flex items-center gap-1 text-xs">
-                                <button class="px-3 py-1.5 rounded-md bg-clima-orange-light text-clima-orange font-semibold">6 Monate</button>
-                                <button class="px-3 py-1.5 rounded-md text-ink-tertiary hover:bg-page transition-colors">12 Monate</button>
+                    <!-- KPI Strip -->
+                    <div class="grid grid-cols-5 gap-4">
+                        <div class="bg-clima-orange-subtle rounded-xl p-4">
+                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Monatsumsatz</div>
+                            <div class="font-display text-2xl font-bold text-ink tracking-tight">€47.850</div>
+                            <div class="flex items-center gap-1.5 mt-1">
+                                <span class="inline-flex items-center gap-0.5 text-clima-green text-[11px] font-semibold">
+                                    <i data-lucide="trending-up" class="w-3 h-3"></i>+12,3%
+                                </span>
+                                <span class="text-ink-tertiary text-[11px]">vs. €42.600</span>
                             </div>
                         </div>
-                        <canvas id="revenueChart" height="200"></canvas>
+                        <div class="bg-page rounded-xl p-4">
+                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Offene Posten</div>
+                            <div class="font-display text-2xl font-bold text-ink tracking-tight">€34.200</div>
+                            <span class="text-clima-orange text-[11px] font-semibold">12 ausstehend</span>
+                        </div>
+                        <div class="bg-page rounded-xl p-4">
+                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Aufträge</div>
+                            <div class="font-display text-2xl font-bold text-ink tracking-tight">23</div>
+                            <span class="text-danger text-[11px] font-semibold">5 überfällig</span>
+                        </div>
+                        <div class="bg-page rounded-xl p-4">
+                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Teams aktiv</div>
+                            <div class="font-display text-2xl font-bold text-ink tracking-tight">8<span class="text-ink-tertiary text-base font-normal"> / 10</span></div>
+                            <span class="inline-flex items-center gap-1 text-clima-green text-[11px] font-semibold"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>36 im Einsatz</span>
+                        </div>
+                        <div class="bg-page rounded-xl p-4">
+                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Qualität Ø</div>
+                            <div class="font-display text-2xl font-bold text-ink tracking-tight">93<span class="text-ink-tertiary text-base font-normal">%</span></div>
+                            <span class="text-clima-green text-[11px] font-semibold">84 Objekte</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart + Schedule + Status — dense 3-column -->
+                <div class="grid grid-cols-12 gap-4 mb-4">
+                    <!-- Revenue Chart -->
+                    <div class="col-span-5 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.1s">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-display font-semibold text-sm text-ink">Umsatzentwicklung</h3>
+                            <div class="flex items-center gap-0.5 text-[11px]">
+                                <button class="px-2 py-1 rounded bg-clima-orange-light text-clima-orange font-semibold">6M</button>
+                                <button class="px-2 py-1 rounded text-ink-tertiary hover:bg-page transition-colors">12M</button>
+                            </div>
+                        </div>
+                        <div style="height: 220px;"><canvas id="revenueChart"></canvas></div>
                     </div>
 
                     <!-- Today's Schedule -->
-                    <div class="col-span-2 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.2s">
-                        <div class="flex items-center justify-between mb-5">
-                            <h3 class="font-display font-semibold text-base text-ink">Heutige Einsätze</h3>
-                            <span class="text-xs text-ink-tertiary font-medium">6 geplant</span>
+                    <div class="col-span-4 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.15s">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-display font-semibold text-sm text-ink">Heutige Einsätze</h3>
+                            <span class="text-[11px] text-clima-orange font-semibold bg-clima-orange-light px-2 py-0.5 rounded-full">6 geplant</span>
                         </div>
-                        <div class="space-y-3">
+                        <div class="space-y-2.5">
                             <div class="relative pl-5 time-marker done">
                                 <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-sm font-medium text-ink">Bürokomplex Mitte</div>
-                                        <div class="text-xs text-ink-tertiary">Team A · 4 Pers. · Unterhaltsrein.</div>
-                                    </div>
-                                    <span class="text-xs text-ink-tertiary font-medium tabular-nums">07:00</span>
+                                    <div><div class="text-[13px] font-medium text-ink">Bürokomplex Mitte</div><div class="text-[11px] text-ink-tertiary">Team A · 4P · Unterhalt</div></div>
+                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">07:00</span>
                                 </div>
                             </div>
                             <div class="relative pl-5 time-marker done">
                                 <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-sm font-medium text-ink">Arztpraxis Dr. Weber</div>
-                                        <div class="text-xs text-ink-tertiary">Team B · 2 Pers. · Grundreinigung</div>
-                                    </div>
-                                    <span class="text-xs text-ink-tertiary font-medium tabular-nums">08:30</span>
+                                    <div><div class="text-[13px] font-medium text-ink">Arztpraxis Dr. Weber</div><div class="text-[11px] text-ink-tertiary">Team B · 2P · Grund</div></div>
+                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">08:30</span>
                                 </div>
                             </div>
                             <div class="relative pl-5 time-marker">
                                 <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-sm font-medium text-ink">Einkaufszentrum CityMall</div>
-                                        <div class="text-xs text-ink-tertiary">Team C · 5 Pers. · Unterhaltsrein.</div>
-                                    </div>
-                                    <span class="text-xs text-clima-orange font-semibold tabular-nums">09:00</span>
+                                    <div><div class="text-[13px] font-medium text-ink">CityMall</div><div class="text-[11px] text-ink-tertiary">Team C · 5P · Unterhalt</div></div>
+                                    <span class="text-[11px] text-clima-orange font-semibold tabular-nums">09:00</span>
                                 </div>
                             </div>
                             <div class="relative pl-5 time-marker upcoming">
                                 <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-sm font-medium text-ink">Wohnanlage Parkstraße</div>
-                                        <div class="text-xs text-ink-tertiary">Team D · 3 Pers. · Treppenhaus</div>
-                                    </div>
-                                    <span class="text-xs text-ink-tertiary font-medium tabular-nums">11:00</span>
+                                    <div><div class="text-[13px] font-medium text-ink">Wohnanlage Parkstr.</div><div class="text-[11px] text-ink-tertiary">Team D · 3P · Treppenhaus</div></div>
+                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">11:00</span>
                                 </div>
                             </div>
                             <div class="relative pl-5 time-marker upcoming">
                                 <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-sm font-medium text-ink">Hotel Residenz</div>
-                                        <div class="text-xs text-ink-tertiary">Team E · 6 Pers. · Zimmerreinigung</div>
-                                    </div>
-                                    <span class="text-xs text-ink-tertiary font-medium tabular-nums">14:00</span>
+                                    <div><div class="text-[13px] font-medium text-ink">Hotel Residenz</div><div class="text-[11px] text-ink-tertiary">Team E · 6P · Zimmer</div></div>
+                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">14:00</span>
                                 </div>
                             </div>
                             <div class="relative pl-5 time-marker upcoming">
                                 <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-sm font-medium text-ink">Fitnessstudio PowerGym</div>
-                                        <div class="text-xs text-ink-tertiary">Team B · 2 Pers. · Grundreinigung</div>
-                                    </div>
-                                    <span class="text-xs text-ink-tertiary font-medium tabular-nums">16:00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Activity + Quality Row — flipped ratio for variety -->
-                <div class="grid grid-cols-5 gap-5 mb-4">
-                    <!-- Recent Activity -->
-                    <div class="col-span-3 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.25s">
-                        <h3 class="font-display font-semibold text-base text-ink mb-5">Letzte Aktivitäten</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <i data-lucide="check" class="w-4 h-4 text-clima-green"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm text-ink"><span class="font-semibold">Rechnung #2026-089</span> bezahlt — CityMall GmbH</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Vor 23 Minuten · €8.500,00</div>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-clima-orange-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <i data-lucide="clipboard-list" class="w-4 h-4 text-clima-orange"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm text-ink"><span class="font-semibold">Neuer Auftrag</span> — Hotel Residenz, Sonderreinigung Konferenzraum</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Vor 1 Stunde · Priorität hoch</div>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <i data-lucide="shield-check" class="w-4 h-4 text-clima-green"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm text-ink"><span class="font-semibold">Qualitätskontrolle</span> — Bürokomplex Mitte: 96% bestanden</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Vor 2 Stunden · Prüfer: M. Kowalski</div>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-page flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <i data-lucide="user-plus" class="w-4 h-4 text-ink-secondary"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm text-ink"><span class="font-semibold">Neuer Kunde</span> — Kanzlei Müller & Partner angelegt</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Vor 3 Stunden · Angebot ausstehend</div>
+                                    <div><div class="text-[13px] font-medium text-ink">PowerGym</div><div class="text-[11px] text-ink-tertiary">Team B · 2P · Grund</div></div>
+                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">16:00</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Objektstatus -->
-                    <div class="col-span-2 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.3s">
-                        <h3 class="font-display font-semibold text-base text-ink mb-5">Objektstatus</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-sm text-ink">Büroreinigung</span>
-                                    <span class="text-xs text-ink-tertiary font-medium">32 Objekte</span>
+                    <!-- Objektstatus + Activity compact -->
+                    <div class="col-span-3 space-y-4 stagger" style="animation-delay: 0.2s">
+                        <!-- Objektstatus -->
+                        <div class="bg-surface rounded-xl p-4 border border-border">
+                            <h3 class="font-display font-semibold text-sm text-ink mb-3">Objektstatus</h3>
+                            <div class="space-y-2.5">
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[12px] text-ink">Büroreinigung</span>
+                                        <span class="text-[11px] text-clima-green font-semibold">94%</span>
+                                    </div>
+                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 94%"></div></div>
                                 </div>
-                                <div class="h-2 bg-page rounded-full overflow-hidden">
-                                    <div class="h-full bg-clima-green rounded-full" style="width: 94%"></div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[12px] text-ink">Praxisreinigung</span>
+                                        <span class="text-[11px] text-clima-green font-semibold">98%</span>
+                                    </div>
+                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 98%"></div></div>
                                 </div>
-                                <div class="text-[11px] text-clima-green mt-1">94% Erfüllungsquote</div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[12px] text-ink">Treppenhausrein.</span>
+                                        <span class="text-[11px] text-danger font-semibold">82%</span>
+                                    </div>
+                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-danger rounded-full" style="width: 82%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-[12px] text-ink">Hotelreinigung</span>
+                                        <span class="text-[11px] text-clima-green font-semibold">91%</span>
+                                    </div>
+                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 91%"></div></div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-sm text-ink">Praxisreinigung</span>
-                                    <span class="text-xs text-ink-tertiary font-medium">18 Objekte</span>
+                        </div>
+                        <!-- Recent Activity compact -->
+                        <div class="bg-surface rounded-xl p-4 border border-border">
+                            <h3 class="font-display font-semibold text-sm text-ink mb-3">Aktivitäten</h3>
+                            <div class="space-y-2.5">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-6 h-6 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i data-lucide="check" class="w-3 h-3 text-clima-green"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-[12px] text-ink"><span class="font-semibold">#2026-089</span> bezahlt · €8.500</div>
+                                        <div class="text-[11px] text-ink-tertiary">CityMall · 23 Min.</div>
+                                    </div>
                                 </div>
-                                <div class="h-2 bg-page rounded-full overflow-hidden">
-                                    <div class="h-full bg-clima-green rounded-full" style="width: 98%"></div>
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-6 h-6 rounded-full bg-clima-orange-light flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i data-lucide="clipboard-list" class="w-3 h-3 text-clima-orange"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-[12px] text-ink"><span class="font-semibold">Sonderreinigung</span> Hotel Residenz</div>
+                                        <div class="text-[11px] text-ink-tertiary">Priorität hoch · 1 Std.</div>
+                                    </div>
                                 </div>
-                                <div class="text-[11px] text-clima-green mt-1">98% Erfüllungsquote</div>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-sm text-ink">Treppenhausreinigung</span>
-                                    <span class="text-xs text-ink-tertiary font-medium">24 Objekte</span>
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-6 h-6 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i data-lucide="shield-check" class="w-3 h-3 text-clima-green"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="text-[12px] text-ink"><span class="font-semibold">QK bestanden</span> Bürokomplex 96%</div>
+                                        <div class="text-[11px] text-ink-tertiary">M. Kowalski · 2 Std.</div>
+                                    </div>
                                 </div>
-                                <div class="h-2.5 bg-page rounded-full overflow-hidden">
-                                    <div class="h-full bg-danger rounded-full" style="width: 82%"></div>
-                                </div>
-                                <div class="text-[11px] text-danger font-medium mt-1">82% Erfüllungsquote — unter Ziel</div>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1.5">
-                                    <span class="text-sm text-ink">Hotelreinigung</span>
-                                    <span class="text-xs text-ink-tertiary font-medium">10 Objekte</span>
-                                </div>
-                                <div class="h-2 bg-page rounded-full overflow-hidden">
-                                    <div class="h-full bg-clima-green rounded-full" style="width: 91%"></div>
-                                </div>
-                                <div class="text-[11px] text-clima-green mt-1">91% Erfüllungsquote</div>
                             </div>
                         </div>
                     </div>
@@ -1417,6 +1371,7 @@
     // Revenue Chart
     const revenueCtx = document.getElementById('revenueChart');
     if (revenueCtx) {
+        revenueCtx.style.height = '100%';
         new Chart(revenueCtx, {
             type: 'bar',
             data: {

@@ -473,15 +473,16 @@
             <!-- ══════════════ VIEW: OBJEKTE ══════════════ -->
             <div id="view-objekte" class="view hidden">
 
-                <div class="flex items-end justify-between mb-6">
-                    <div>
+                <!-- Compact header with inline count + search -->
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-baseline gap-3">
                         <h2 class="font-display text-2xl font-bold text-ink">Objekte</h2>
-                        <p class="text-ink-secondary text-sm mt-1">84 aktive Objekte · 6 pausiert</p>
+                        <span class="text-ink-tertiary text-sm">84 aktiv · <span class="text-ink-secondary font-medium">6 pausiert</span></span>
                     </div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
                         <div class="relative">
                             <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary"></i>
-                            <input type="text" placeholder="Objekt suchen…" class="pl-9 pr-4 py-2 text-sm bg-surface border border-border rounded-lg w-56 focus:outline-none focus:border-clima-orange/50 font-body">
+                            <input type="text" placeholder="Objekt suchen…" class="pl-9 pr-4 py-2 text-sm bg-surface border border-border rounded-lg w-56 focus:outline-none focus:border-clima-orange/50 focus:ring-2 focus:ring-clima-orange/10 font-body">
                         </div>
                         <button class="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg text-ink-secondary hover:bg-surface transition-colors">
                             <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
@@ -626,10 +627,11 @@
             <!-- ══════════════ VIEW: KUNDEN / CRM ══════════════ -->
             <div id="view-kunden" class="view hidden">
 
-                <div class="flex items-end justify-between mb-6">
-                    <div>
-                        <h2 class="font-display text-2xl font-bold text-ink">Kunden / CRM</h2>
-                        <p class="text-ink-secondary text-sm mt-1">47 aktive Kunden · €142.800 monatlicher Vertragswert</p>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-baseline gap-4">
+                        <h2 class="font-display text-2xl font-bold text-ink">Kunden</h2>
+                        <span class="font-display text-lg font-semibold text-clima-green">€142.800<span class="text-ink-tertiary text-sm font-normal"> /Monat</span></span>
+                        <span class="text-ink-tertiary text-sm">· 47 aktiv</span>
                     </div>
                     <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
@@ -639,8 +641,8 @@
 
                 <!-- Pipeline Funnel — proportional segments -->
                 <div class="flex gap-1 mb-6 h-[72px]">
-                    <div class="flex-[3] bg-page rounded-l-xl px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-medium text-ink-tertiary uppercase tracking-wider">Anfrage</span>
+                    <div class="flex-[3] bg-clima-orange-subtle rounded-l-xl px-4 flex items-center justify-between min-w-0">
+                        <span class="text-[11px] font-medium text-ink-secondary uppercase tracking-wider">Anfrage</span>
                         <div class="text-right">
                             <div class="font-display text-lg font-bold text-ink leading-tight">3</div>
                             <div class="text-[10px] text-ink-tertiary">€4.200</div>
@@ -660,8 +662,8 @@
                             <div class="text-[10px] text-ink-tertiary">€15.300</div>
                         </div>
                     </div>
-                    <div class="flex-[2] bg-page px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-medium text-ink-tertiary uppercase tracking-wider truncate mr-2">Verhandl.</span>
+                    <div class="flex-[2] bg-clima-green-subtle px-4 flex items-center justify-between min-w-0">
+                        <span class="text-[11px] font-medium text-ink-secondary uppercase tracking-wider truncate mr-2">Verhandl.</span>
                         <div class="text-right flex-shrink-0">
                             <div class="font-display text-lg font-bold text-ink leading-tight">2</div>
                             <div class="text-[10px] text-ink-tertiary">€6.800</div>
@@ -843,12 +845,14 @@
             </div>
 
 
-            <!-- ══════════════ VIEW: AUFTRÄGE ══════════════ -->
+            <!-- ══════════════ VIEW: AUFTRÄGE — Kanban ══════════════ -->
             <div id="view-auftraege" class="view hidden">
-                <div class="flex items-end justify-between mb-6">
-                    <div>
-                        <h2 class="font-display text-2xl font-bold text-ink">Aufträge</h2>
-                        <p class="text-ink-secondary text-sm mt-1">23 offene Aufträge · 5 überfällig</p>
+                <!-- Header: tabs statt h2+subtitle -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-1">
+                        <button class="px-4 py-2 rounded-lg text-sm font-semibold bg-clima-orange text-white">Alle (23)</button>
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-ink-secondary hover:bg-page transition-colors">Überfällig (5)</button>
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-ink-secondary hover:bg-page transition-colors">Heute</button>
                     </div>
                     <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
@@ -856,73 +860,99 @@
                     </button>
                 </div>
 
-                <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-border">
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Auftrag</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Kunde</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Art</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Fällig</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Team</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink">#2026-047</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Hotel Residenz</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Sonderreinigung</td>
-                                <td class="py-3.5 px-5 text-clima-orange font-medium tabular-nums">Heute</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team E</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-orange bg-clima-orange-light px-2.5 py-1 rounded-full">In Arbeit</span></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink">#2026-046</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">CityMall GmbH</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Grundreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">12.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team C</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-secondary bg-page px-2.5 py-1 rounded-full">Geplant</span></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink">#2026-045</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">WohnBau AG</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Fensterreinigung</td>
-                                <td class="py-3.5 px-5 text-danger font-medium tabular-nums">08.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team D</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-danger bg-danger-light px-2.5 py-1 rounded-full">Überfällig</span></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink">#2026-044</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Kanzlei Müller</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Büroreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">13.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team F</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-secondary bg-page px-2.5 py-1 rounded-full">Geplant</span></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3.5 px-5 font-medium text-ink">#2026-043</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">PowerGym Berlin</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Grundreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">14.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team B</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Abgeschlossen</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Kanban Board -->
+                <div class="grid grid-cols-3 gap-4">
+                    <!-- Column: Geplant -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2.5 h-2.5 rounded-full bg-ink-tertiary/40"></span>
+                            <span class="text-sm font-semibold text-ink">Geplant</span>
+                            <span class="text-xs text-ink-tertiary">4</span>
+                        </div>
+                        <div class="space-y-2.5">
+                            <div class="bg-surface rounded-xl border border-border p-4 pipeline-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-ink-tertiary tabular-nums">#2026-046</span>
+                                    <span class="text-[11px] text-ink-tertiary tabular-nums">12.05.</span>
+                                </div>
+                                <div class="font-medium text-sm text-ink mb-1">Grundreinigung</div>
+                                <div class="text-xs text-ink-tertiary">CityMall GmbH · Team C</div>
+                            </div>
+                            <div class="bg-surface rounded-xl border border-border p-4 pipeline-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-ink-tertiary tabular-nums">#2026-044</span>
+                                    <span class="text-[11px] text-ink-tertiary tabular-nums">13.05.</span>
+                                </div>
+                                <div class="font-medium text-sm text-ink mb-1">Büroreinigung</div>
+                                <div class="text-xs text-ink-tertiary">Kanzlei Müller · Team F</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column: In Arbeit -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2.5 h-2.5 rounded-full bg-clima-orange"></span>
+                            <span class="text-sm font-semibold text-ink">In Arbeit</span>
+                            <span class="text-xs text-ink-tertiary">1</span>
+                        </div>
+                        <div class="space-y-2.5">
+                            <div class="bg-clima-orange-subtle rounded-xl border border-clima-orange/20 p-4 pipeline-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-clima-orange tabular-nums">#2026-047</span>
+                                    <span class="text-[11px] text-clima-orange font-semibold">Heute</span>
+                                </div>
+                                <div class="font-medium text-sm text-ink mb-1">Sonderreinigung Konferenzraum</div>
+                                <div class="text-xs text-ink-tertiary">Hotel Residenz · Team E</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column: Überfällig + Abgeschlossen -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="w-2.5 h-2.5 rounded-full bg-danger"></span>
+                            <span class="text-sm font-semibold text-ink">Überfällig</span>
+                            <span class="text-xs text-danger font-semibold">1</span>
+                        </div>
+                        <div class="space-y-2.5">
+                            <div class="bg-danger-light rounded-xl border border-danger/15 p-4 pipeline-card">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-danger tabular-nums">#2026-045</span>
+                                    <span class="text-[11px] text-danger font-semibold">08.05.</span>
+                                </div>
+                                <div class="font-medium text-sm text-ink mb-1">Fensterreinigung</div>
+                                <div class="text-xs text-ink-tertiary">WohnBau AG · Team D</div>
+                            </div>
+                        </div>
+                        <!-- Abgeschlossen underneath -->
+                        <div class="flex items-center gap-2 mb-3 mt-5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-clima-green"></span>
+                            <span class="text-sm font-semibold text-ink">Abgeschlossen</span>
+                            <span class="text-xs text-ink-tertiary">1</span>
+                        </div>
+                        <div class="space-y-2.5">
+                            <div class="bg-clima-green-subtle rounded-xl border border-clima-green/15 p-4 pipeline-card opacity-70">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-ink-tertiary tabular-nums">#2026-043</span>
+                                    <span class="text-[11px] text-ink-tertiary tabular-nums">14.05.</span>
+                                </div>
+                                <div class="font-medium text-sm text-ink mb-1">Grundreinigung</div>
+                                <div class="text-xs text-ink-tertiary">PowerGym Berlin · Team B</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
 
             <!-- ══════════════ VIEW: MITARBEITER ══════════════ -->
             <div id="view-mitarbeiter" class="view hidden">
-                <div class="flex items-end justify-between mb-6">
-                    <div>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-baseline gap-3">
                         <h2 class="font-display text-2xl font-bold text-ink">Mitarbeiter</h2>
-                        <p class="text-ink-secondary text-sm mt-1">42 Mitarbeiter · 36 im Einsatz · 10 Teams</p>
+                        <span class="inline-flex items-center gap-1.5 text-clima-green text-sm font-medium"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>36 im Einsatz</span>
+                        <span class="text-ink-tertiary text-sm">/ 42 gesamt · 10 Teams</span>
                     </div>
-                    <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                    <button class="flex items-center gap-2 px-4 py-2 text-sm border border-border rounded-lg text-ink-secondary font-medium hover:bg-surface transition-colors">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         Mitarbeiter anlegen
                     </button>
@@ -1129,18 +1159,40 @@
 
             <!-- ══════════════ VIEW: RECHNUNGEN ══════════════ -->
             <div id="view-rechnungen" class="view hidden">
-                <div class="flex items-end justify-between mb-6">
+                <!-- Summen-Banner statt h2+subtitle -->
+                <div class="flex items-end gap-10 mb-6">
                     <div>
-                        <h2 class="font-display text-2xl font-bold text-ink">Rechnungen</h2>
-                        <p class="text-ink-secondary text-sm mt-1">12 offene Rechnungen · €34.200 ausstehend</p>
+                        <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Ausstehend</div>
+                        <div class="font-display text-3xl font-bold text-ink tracking-tight">€34.200</div>
                     </div>
-                    <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        Neue Rechnung
-                    </button>
+                    <div>
+                        <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Bezahlt (Mai)</div>
+                        <div class="font-display text-xl font-bold text-clima-green tracking-tight">€10.600</div>
+                    </div>
+                    <div>
+                        <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Überfällig</div>
+                        <div class="font-display text-xl font-bold text-danger tracking-tight">€1.200</div>
+                    </div>
+                    <div class="ml-auto flex items-center gap-2">
+                        <button class="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg text-ink-secondary hover:bg-surface transition-colors">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Export
+                        </button>
+                        <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Neue Rechnung
+                        </button>
+                    </div>
                 </div>
 
                 <div class="bg-surface rounded-xl border border-border overflow-hidden">
+                    <!-- Filter tabs -->
+                    <div class="flex items-center gap-2 px-5 py-3 border-b border-border">
+                        <button class="px-3 py-1.5 rounded-md bg-clima-orange-light text-clima-orange text-xs font-semibold">Alle (12)</button>
+                        <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Offen (2)</button>
+                        <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Bezahlt (2)</button>
+                        <button class="px-3 py-1.5 rounded-md text-danger text-xs font-medium hover:bg-danger-light transition-colors">Überfällig (1)</button>
+                    </div>
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="border-b border-border">

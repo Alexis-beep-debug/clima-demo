@@ -17,14 +17,14 @@
   .sidebar-top { padding: 12px 12px 8px; display: flex; align-items: center; gap: 8px; }
   .s-logo { width: 22px; height: 22px; background: #1a1a1a; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 10px; }
   .s-brand { font-weight: 600; font-size: 13px; color: #1a1a1a; }
-  .s-nav { flex: 1; padding: 4px 8px; overflow-y: auto; }
-  .s-item { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 5px; color: #666; font-size: 13px; cursor: pointer; transition: background 0.1s, color 0.1s; }
+  .s-nav { flex: 1; padding: 8px 8px; overflow-y: auto; }
+  .s-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; color: #666; font-size: 13px; cursor: pointer; transition: background 0.1s, color 0.1s; }
   .s-item:hover { background: #f5f5f5; color: #1a1a1a; }
   .s-item.active { background: #f0f0f0; color: #1a1a1a; font-weight: 500; }
   .s-icon { width: 15px; height: 15px; opacity: 0.45; flex-shrink: 0; }
   .s-item.active .s-icon { opacity: 0.7; }
   .s-badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 8px; }
-  .s-label { font-size: 10.5px; color: #aaa; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; padding: 12px 8px 4px; }
+  .s-label { font-size: 10.5px; color: #aaa; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; padding: 18px 10px 6px; }
   .s-count { margin-left: auto; font-size: 11px; color: #bbb; font-weight: 400; }
   .s-bottom { border-top: 1px solid #eee; margin: 0 12px; padding: 10px 0; }
   .s-user { display: flex; align-items: center; gap: 8px; padding: 4px; }
@@ -50,7 +50,7 @@
   .content { flex: 1; overflow-y: auto; }
 
   /* Page header — Folk: big title + action buttons on same line */
-  .page-head { padding: 20px 24px 0; }
+  .page-head { padding: 28px 32px 0; }
   .page-row { display: flex; align-items: baseline; justify-content: space-between; }
   .page-title { font-size: 26px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
   .page-actions { display: flex; gap: 6px; }
@@ -60,7 +60,7 @@
   .btn-secondary:hover { background: #fafafa; border-color: #d0d0d0; }
 
   /* Subtle inline stats — NOT hero KPIs, just a quiet info row */
-  .stats-row { display: flex; gap: 20px; padding: 16px 24px 0; }
+  .stats-row { display: flex; gap: 20px; padding: 16px 32px 0; }
   .stat { font-size: 12px; color: #999; }
   .stat b { color: #1a1a1a; font-weight: 600; }
   .stat .up { color: #22c55e; font-weight: 500; }
@@ -68,15 +68,15 @@
   .stat .down { color: #ef4444; font-weight: 500; }
 
   /* Tabs — Folk uses view switcher */
-  .tabs { display: flex; gap: 0; padding: 14px 24px 0; border-bottom: 1px solid #eee; }
-  .tab { padding: 6px 12px 10px; font-size: 12.5px; color: #999; font-weight: 400; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs { display: flex; gap: 0; padding: 18px 32px 0; border-bottom: 1px solid #eee; }
+  .tab { padding: 8px 14px 12px; font-size: 12.5px; color: #999; font-weight: 400; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
   .tab:hover { color: #555; }
   .tab.active { color: #1a1a1a; font-weight: 500; border-bottom-color: #1a1a1a; }
 
   /* Table — Folk style: no borders, clean hover, full width */
   .tbl { width: 100%; border-collapse: collapse; }
-  .tbl th { text-align: left; padding: 10px 24px; font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; }
-  .tbl td { padding: 13px 24px; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+  .tbl th { text-align: left; padding: 12px 32px; font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; }
+  .tbl td { padding: 14px 32px; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
   .tbl tr:hover td { background: #fafafa; transition: background 0.1s; }
   .tbl tr:last-child td { border-bottom: none; }
 
@@ -121,8 +121,8 @@
   /* Gantt-specific (Einsatzplanung) */
   .gantt-row { display: flex; border-bottom: 1px solid #f5f5f5; }
   .gantt-row:last-child { border-bottom: none; }
-  .gantt-label { width: 140px; flex-shrink: 0; padding: 14px 16px; border-right: 1px solid #eee; }
-  .gantt-track { flex: 1; position: relative; min-height: 48px; padding: 6px 0; }
+  .gantt-label { width: 160px; flex-shrink: 0; padding: 16px 20px; border-right: 1px solid #eee; }
+  .gantt-track { flex: 1; position: relative; min-height: 56px; padding: 8px 0; }
   .gantt-bar { position: absolute; top: 8px; bottom: 8px; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 500; color: #fff; background: #1a1a1a; overflow: hidden; white-space: nowrap; }
   .gantt-bar-70 { background: rgba(26,26,26,0.7); }
   .gantt-bar-40 { background: rgba(26,26,26,0.4); }
@@ -130,18 +130,18 @@
   .gantt-time-header > div { flex: 1; text-align: center; font-size: 10px; color: #aaa; padding: 6px 0; border-left: 1px solid #f0f0f0; }
 
   /* Auswertungen chart area */
-  .chart-container { padding: 0 24px 24px; }
+  .chart-container { padding: 0 32px 28px; }
   .chart-wrap { max-width: 600px; height: 200px; }
 
   /* Analytics text rows */
-  .metric-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid #f5f5f5; }
+  .metric-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; border-bottom: 1px solid #f5f5f5; }
   .metric-row:last-child { border-bottom: none; }
   .metric-label { font-size: 13px; color: #1a1a1a; }
   .metric-val { font-size: 13px; font-weight: 600; color: #1a1a1a; }
   .metric-change { font-size: 11px; margin-left: 8px; }
 
   /* Progress bar (Auswertungen only) */
-  .pbar { display: flex; align-items: center; gap: 10px; padding: 10px 24px; }
+  .pbar { display: flex; align-items: center; gap: 12px; padding: 12px 32px; }
   .pbar-label { font-size: 12px; color: #1a1a1a; width: 140px; flex-shrink: 0; }
   .pbar-track { flex: 1; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden; }
   .pbar-fill { height: 100%; border-radius: 2px; }
@@ -150,7 +150,7 @@
   .pbar-val { font-size: 11px; font-weight: 600; width: 40px; text-align: right; flex-shrink: 0; }
 
   /* Section divider for Auswertungen */
-  .section-label { font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: 0.3px; padding: 20px 24px 8px; }
+  .section-label { font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: 0.3px; padding: 28px 32px 10px; }
 
   /* Row highlights */
   .row-active td { background: #fffbeb !important; }

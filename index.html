@@ -1134,7 +1134,113 @@
       <!-- VIEW 8: Auswertungen -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-auswertungen" class="view">
-        <!-- Content added in Task 6 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Auswertungen</div>
+            <div class="page-actions">
+              <select style="height:32px; padding:0 10px; border-radius:6px; border:1px solid #e0e0e0; background:#fff; font-size:12.5px; font-family:inherit; color:#555; cursor:pointer;">
+                <option>Mai 2026</option>
+                <option>April 2026</option>
+                <option>März 2026</option>
+              </select>
+              <button class="btn-secondary">&darr; Export</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>Mai 2026</b> · Gesamtumsatz YTD <b>€216.750</b></div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Übersicht</div>
+            <div class="tab">Umsatz</div>
+            <div class="tab">Qualität</div>
+            <div class="tab">Personal</div>
+          </div>
+        </div>
+
+        <!-- SECTION: UMSATZ -->
+        <div class="section-label">UMSATZ</div>
+        <div class="chart-container">
+          <div class="chart-wrap">
+            <canvas id="auswertungenChart"></canvas>
+          </div>
+        </div>
+
+        <!-- SECTION: KENNZAHLEN -->
+        <div class="section-label">KENNZAHLEN</div>
+        <div class="metric-row">
+          <div class="metric-label">Ø Marge</div>
+          <div><span class="metric-val">34,2%</span><span class="metric-change up">+2,1 PP</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Kundenzufriedenheit</div>
+          <div><span class="metric-val">4,7 / 5</span><span class="metric-change" style="color:#999;">124 Bewertungen</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Personalauslastung</div>
+          <div><span class="metric-val">87%</span><span class="metric-change" style="color:#999;">Ø 36,8 Std./Woche</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Neue Kunden (YTD)</div>
+          <div><span class="metric-val">8</span><span class="metric-change up">+3 ggü. Vorjahr</span></div>
+        </div>
+
+        <!-- SECTION: ERFÜLLUNGSQUOTE -->
+        <div class="section-label">ERFÜLLUNGSQUOTE</div>
+        <div class="pbar">
+          <div class="pbar-label">Büroreinigung</div>
+          <div class="pbar-track"><div class="pbar-fill pbar-fill-green" style="width:94%"></div></div>
+          <div class="pbar-val">94%</div>
+        </div>
+        <div class="pbar">
+          <div class="pbar-label">Praxisreinigung</div>
+          <div class="pbar-track"><div class="pbar-fill pbar-fill-green" style="width:98%"></div></div>
+          <div class="pbar-val">98%</div>
+        </div>
+        <div class="pbar">
+          <div class="pbar-label">Treppenhausrein.</div>
+          <div class="pbar-track"><div class="pbar-fill pbar-fill-red" style="width:82%"></div></div>
+          <div class="pbar-val">82%</div>
+        </div>
+        <div class="pbar">
+          <div class="pbar-label">Hotelreinigung</div>
+          <div class="pbar-track"><div class="pbar-fill pbar-fill-green" style="width:91%"></div></div>
+          <div class="pbar-val">91%</div>
+        </div>
+
+        <!-- SECTION: TOP-KUNDEN -->
+        <div class="section-label">TOP-KUNDEN NACH UMSATZ</div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Kunde</th>
+              <th style="text-align: right;">Monatsumsatz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-main">Hotel Residenz Berlin</td>
+              <td style="text-align: right; font-weight: 500;">€12.000</td>
+            </tr>
+            <tr>
+              <td class="cell-main">CityMall GmbH</td>
+              <td style="text-align: right; font-weight: 500;">€8.500</td>
+            </tr>
+            <tr>
+              <td class="cell-main">WohnBau AG</td>
+              <td style="text-align: right; font-weight: 500;">€3.400</td>
+            </tr>
+            <tr>
+              <td class="cell-main">PowerGym Berlin</td>
+              <td style="text-align: right; font-weight: 500;">€2.100</td>
+            </tr>
+            <tr>
+              <td class="cell-main">Dr. med. Weber</td>
+              <td style="text-align: right; font-weight: 500;">€1.200</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
     </div>
@@ -1170,9 +1276,34 @@
     if (viewId === 'auswertungen' && !window._chartInit) initCharts();
   }
 
-  // Chart.js initialization stub (filled in Task 6)
   function initCharts() {
-    // Will be implemented when Auswertungen view is added
+    const ctx = document.getElementById('auswertungenChart');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Dez', 'Jan', 'Feb', 'Mär', 'Apr', 'Mai'],
+        datasets: [{
+          data: [38200, 41500, 39800, 43100, 45600, 47850],
+          backgroundColor: ['#e8e8e8','#e8e8e8','#e8e8e8','#e8e8e8','#e8e8e8','#1a1a1a'],
+          borderRadius: 3, barPercentage: 0.5,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: {
+          backgroundColor: '#1a1a1a', titleFont: { family: 'Inter', size: 11 },
+          bodyFont: { family: 'Inter', size: 12, weight: '600' },
+          padding: 10, cornerRadius: 6,
+          callbacks: { label: ctx => '€' + ctx.parsed.y.toLocaleString('de-DE') }
+        }},
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 }, color: '#aaa' }, border: { display: false } },
+          y: { grid: { color: '#f0f0f0' }, ticks: { font: { family: 'Inter', size: 11 }, color: '#aaa', callback: v => '€' + (v/1000) + 'k', maxTicksLimit: 5 }, border: { display: false } }
+        }
+      }
+    });
+    window._chartInit = true;
   }
 
   // Initialize Lucide icons if available

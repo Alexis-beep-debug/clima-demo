@@ -620,14 +620,328 @@
       <!-- VIEW 4: Kunden -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-kunden" class="view">
-        <!-- Content added in Task 4 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Kunden</div>
+            <div class="page-actions">
+              <button class="btn-secondary">&#9993; Email all</button>
+              <button class="btn-primary">+ Neuer Kunde</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>47</b> Kunden · <b>€142.800</b> monatl. Vertragswert</div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Alle</div>
+            <div class="tab">Pipeline</div>
+            <div class="tab">Geschlossen</div>
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Kunde</th>
+              <th>Typ</th>
+              <th style="text-align: right;">Vertragswert</th>
+              <th>Phase</th>
+              <th>Letzter Kontakt</th>
+              <th>Nächste Aktion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">CM</div>
+                  <div>
+                    <div class="cell-main">CityMall GmbH</div>
+                    <div class="cell-sub">Thomas Richter · Facility Manager</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Großkunde</td>
+              <td style="text-align: right; font-weight: 500;">€8.500/Mo</td>
+              <td><span class="tag tag-green">Gewonnen</span></td>
+              <td class="cell-mono">08.05.2026</td>
+              <td class="cell-muted">QK-Bericht senden</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">HR</div>
+                  <div>
+                    <div class="cell-main">Hotel Residenz Berlin</div>
+                    <div class="cell-sub">Sandra Hoffmann · Hoteldirektorin</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Hotelkunde</td>
+              <td style="text-align: right; font-weight: 500;">€12.000/Mo</td>
+              <td><span class="tag tag-green">Gewonnen</span></td>
+              <td class="cell-mono">09.05.2026</td>
+              <td class="cell-muted">Vertragsverlängerung</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">WB</div>
+                  <div>
+                    <div class="cell-main">WohnBau AG</div>
+                    <div class="cell-sub">Klaus Bergmann · Hausverwaltung</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Hausverwaltung</td>
+              <td style="text-align: right; font-weight: 500;">€3.400/Mo</td>
+              <td><span class="tag tag-green">Gewonnen</span></td>
+              <td class="cell-mono">06.05.2026</td>
+              <td class="cell-muted">Neue Objekte besprechen</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">MP</div>
+                  <div>
+                    <div class="cell-main">Müller &amp; Partner RA</div>
+                    <div class="cell-sub">Dr. Claudia Müller · Senior Partner</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Bürokunde</td>
+              <td style="text-align: right; font-weight: 500;">€850/Mo</td>
+              <td><span class="tag tag-orange">Angebot</span></td>
+              <td class="cell-mono">10.05.2026</td>
+              <td class="cell-muted">Angebot nachfassen</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">DW</div>
+                  <div>
+                    <div class="cell-main">Dr. med. Weber</div>
+                    <div class="cell-sub">Dr. Michael Weber · Praxisinhaber</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Praxiskunde</td>
+              <td style="text-align: right; font-weight: 500;">€1.200/Mo</td>
+              <td><span class="tag tag-green">Gewonnen</span></td>
+              <td class="cell-mono">07.05.2026</td>
+              <td class="cell-muted">Monatsabrechnung</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">PG</div>
+                  <div>
+                    <div class="cell-main">PowerGym Berlin</div>
+                    <div class="cell-sub">Markus Stein · Betriebsleiter</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Fitnessstudio</td>
+              <td style="text-align: right; font-weight: 500;">€2.100/Mo</td>
+              <td><span class="tag tag-yellow">Verhandlung</span></td>
+              <td class="cell-mono">09.05.2026</td>
+              <td class="cell-muted">Besichtigung Dienstag</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">SP</div>
+                  <div>
+                    <div class="cell-main">Stadtpark Grundschule</div>
+                    <div class="cell-sub">Frau Lehmann · Schulleitung</div>
+                  </div>
+                </div>
+              </td>
+              <td class="cell-muted">Bildungseinr.</td>
+              <td style="text-align: right; font-weight: 500;">€3.800/Mo</td>
+              <td><span class="tag tag-gray">Anfrage</span></td>
+              <td class="cell-mono">10.05.2026</td>
+              <td class="cell-muted">Erstgespräch planen</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════ -->
       <!-- VIEW 5: Mitarbeiter -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-mitarbeiter" class="view">
-        <!-- Content added in Task 4 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Mitarbeiter</div>
+            <div class="page-actions">
+              <button class="btn-secondary">+ Mitarbeiter anlegen</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>42</b> Mitarbeiter · <b>36</b> im Einsatz · <b>10</b> Teams</div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Alle</div>
+            <div class="tab">Nach Team</div>
+            <div class="tab">Verfügbarkeit</div>
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Team</th>
+              <th>Objekte</th>
+              <th>Std./Woche</th>
+              <th>Seit</th>
+              <th>Bewertung</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">MK</div>
+                  <div>
+                    <div class="cell-main">Maria Kowalski</div>
+                    <div class="cell-sub">Teamleiterin</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#22c55e"></span>Team A</span></td>
+              <td class="cell-mono">8</td>
+              <td class="cell-mono">38,5</td>
+              <td class="cell-mono">03/2022</td>
+              <td class="cell-muted">4,8 &#9733;</td>
+              <td><span class="tag tag-green">Im Einsatz</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">AH</div>
+                  <div>
+                    <div class="cell-main">Ahmed Hassan</div>
+                    <div class="cell-sub">Reinigungskraft</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#22c55e"></span>Team A</span></td>
+              <td class="cell-mono">5</td>
+              <td class="cell-mono">40,0</td>
+              <td class="cell-mono">08/2023</td>
+              <td class="cell-muted">4,6 &#9733;</td>
+              <td><span class="tag tag-green">Im Einsatz</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">TB</div>
+                  <div>
+                    <div class="cell-main">Thomas Bergmann</div>
+                    <div class="cell-sub">Teamleiter</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td class="cell-mono">6</td>
+              <td class="cell-mono">39,0</td>
+              <td class="cell-mono">01/2021</td>
+              <td class="cell-muted">4,9 &#9733;</td>
+              <td><span class="tag tag-green">Im Einsatz</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">AP</div>
+                  <div>
+                    <div class="cell-main">Anna Petrova</div>
+                    <div class="cell-sub">Reinigungskraft</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td class="cell-mono">4</td>
+              <td class="cell-mono">32,0</td>
+              <td class="cell-mono">11/2023</td>
+              <td class="cell-muted">4,5 &#9733;</td>
+              <td><span class="tag tag-gray">Frei</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">LF</div>
+                  <div>
+                    <div class="cell-main">Luis Fernandez</div>
+                    <div class="cell-sub">Teamleiter</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#f59e0b"></span>Team C</span></td>
+              <td class="cell-mono">7</td>
+              <td class="cell-mono">40,0</td>
+              <td class="cell-mono">06/2022</td>
+              <td class="cell-muted">4,7 &#9733;</td>
+              <td><span class="tag tag-green">Im Einsatz</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">PS</div>
+                  <div>
+                    <div class="cell-main">Peter Schulz</div>
+                    <div class="cell-sub">Teamleiter</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#a855f7"></span>Team D</span></td>
+              <td class="cell-mono">5</td>
+              <td class="cell-mono">38,0</td>
+              <td class="cell-mono">04/2022</td>
+              <td class="cell-muted">4,6 &#9733;</td>
+              <td><span class="tag tag-green">Im Einsatz</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">SK</div>
+                  <div>
+                    <div class="cell-main">Sarah Krüger</div>
+                    <div class="cell-sub">Reinigungskraft</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#a855f7"></span>Team D</span></td>
+              <td class="cell-mono">3</td>
+              <td class="cell-mono">25,0</td>
+              <td class="cell-mono">03/2024</td>
+              <td class="cell-muted">4,4 &#9733;</td>
+              <td><span class="tag tag-orange">Urlaub</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar">JN</div>
+                  <div>
+                    <div class="cell-main">Jan Nowak</div>
+                    <div class="cell-sub">Teamleiter</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#ec4899"></span>Team E</span></td>
+              <td class="cell-mono">6</td>
+              <td class="cell-mono">40,0</td>
+              <td class="cell-mono">09/2021</td>
+              <td class="cell-muted">4,8 &#9733;</td>
+              <td><span class="tag tag-green">Im Einsatz</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════ -->

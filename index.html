@@ -948,14 +948,186 @@
       <!-- VIEW 6: Einsatzplanung -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-planung" class="view">
-        <!-- Content added in Task 5 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Einsatzplanung</div>
+            <div class="page-actions">
+              <button class="btn-secondary">&larr; Vorwoche</button>
+              <button class="btn-primary">Heute</button>
+              <button class="btn-secondary">Nächste &rarr;</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>KW 20</b> · 12.–16. Mai 2026 · <b>5</b> Teams eingeplant</div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab">Tagesansicht</div>
+            <div class="tab active">Wochenplan</div>
+          </div>
+        </div>
+
+        <!-- Gantt time axis -->
+        <div style="display:flex; border-bottom: 1px solid #eee;">
+          <div style="width:140px; flex-shrink:0; border-right: 1px solid #eee;"></div>
+          <div class="gantt-time-header" style="flex:1;">
+            <div>06:00</div>
+            <div>08:00</div>
+            <div>10:00</div>
+            <div>12:00</div>
+            <div>14:00</div>
+            <div>16:00</div>
+            <div>18:00</div>
+            <div>20:00</div>
+          </div>
+        </div>
+
+        <!-- Team A -->
+        <div class="gantt-row">
+          <div class="gantt-label">
+            <div class="cell-main">Team A</div>
+            <div class="cell-sub">M. Kowalski +3</div>
+          </div>
+          <div class="gantt-track">
+            <div class="gantt-bar" style="left:7.14%; width:28.57%;">Bürokomplex · 07–11</div>
+          </div>
+        </div>
+
+        <!-- Team B -->
+        <div class="gantt-row">
+          <div class="gantt-label">
+            <div class="cell-main">Team B</div>
+            <div class="cell-sub">T. Bergmann +1</div>
+          </div>
+          <div class="gantt-track">
+            <div class="gantt-bar gantt-bar-70" style="left:17.86%; width:14.29%;">Dr. Weber · 08:30</div>
+            <div class="gantt-bar gantt-bar-70" style="left:71.43%; width:14.29%;">PowerGym · 16–18</div>
+          </div>
+        </div>
+
+        <!-- Team C -->
+        <div class="gantt-row">
+          <div class="gantt-label">
+            <div class="cell-main">Team C</div>
+            <div class="cell-sub">L. Fernandez +4</div>
+          </div>
+          <div class="gantt-track">
+            <div class="gantt-bar" style="left:21.43%; width:35.71%;">CityMall · 09–14</div>
+          </div>
+        </div>
+
+        <!-- Team D -->
+        <div class="gantt-row">
+          <div class="gantt-label">
+            <div class="cell-main">Team D</div>
+            <div class="cell-sub">P. Schulz +2</div>
+          </div>
+          <div class="gantt-track">
+            <div class="gantt-bar gantt-bar-40" style="left:35.71%; width:21.43%;">Wohnanlage · 11–14</div>
+          </div>
+        </div>
+
+        <!-- Team E -->
+        <div class="gantt-row">
+          <div class="gantt-label">
+            <div class="cell-main">Team E</div>
+            <div class="cell-sub">J. Nowak +5</div>
+          </div>
+          <div class="gantt-track">
+            <div class="gantt-bar" style="left:57.14%; width:35.71%;">Hotel Residenz · 14–19</div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div style="padding: 16px 24px;">
+          <div class="stat">
+            <span style="display:inline-block;width:10px;height:10px;background:#1a1a1a;border-radius:2px;margin-right:4px;vertical-align:middle;"></span> 100% Unterhalts-/Zimmerreinigung &nbsp;·&nbsp;
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(26,26,26,0.7);border-radius:2px;margin-right:4px;vertical-align:middle;"></span> 70% Grund-/Praxisreinigung &nbsp;·&nbsp;
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(26,26,26,0.4);border-radius:2px;margin-right:4px;vertical-align:middle;"></span> 40% Treppenhausreinigung
+          </div>
+        </div>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════ -->
       <!-- VIEW 7: Rechnungen -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-rechnungen" class="view">
-        <!-- Content added in Task 5 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Rechnungen</div>
+            <div class="page-actions">
+              <button class="btn-secondary">&darr; Export</button>
+              <button class="btn-primary">+ Neue Rechnung</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>€34.200</b> ausstehend · <b>€10.600</b> bezahlt (Mai) · <span class="down"><b>€1.200</b> überfällig</span></div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Alle</div>
+            <div class="tab">Offen</div>
+            <div class="tab">Bezahlt</div>
+            <div class="tab">Überfällig</div>
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Rechnung</th>
+              <th>Kunde</th>
+              <th>Leistungszeitraum</th>
+              <th style="text-align: right;">Betrag</th>
+              <th>Fällig</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-main">#R-2026-091</td>
+              <td class="cell-muted">Hotel Residenz Berlin</td>
+              <td class="cell-muted">April 2026</td>
+              <td style="text-align: right; font-weight: 500;">€12.000,00</td>
+              <td class="cell-mono">15.05.2026</td>
+              <td><span class="tag tag-orange">Offen</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#R-2026-090</td>
+              <td class="cell-muted">WohnBau AG</td>
+              <td class="cell-muted">April 2026</td>
+              <td style="text-align: right; font-weight: 500;">€3.400,00</td>
+              <td class="cell-mono">12.05.2026</td>
+              <td><span class="tag tag-orange">Offen</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#R-2026-089</td>
+              <td class="cell-muted">CityMall GmbH</td>
+              <td class="cell-muted">April 2026</td>
+              <td style="text-align: right; font-weight: 500;">€8.500,00</td>
+              <td class="cell-mono">10.05.2026</td>
+              <td><span class="tag tag-green">Bezahlt</span></td>
+            </tr>
+            <tr class="row-overdue">
+              <td class="cell-main">#R-2026-088</td>
+              <td class="cell-muted">Dr. med. Weber</td>
+              <td class="cell-muted">April 2026</td>
+              <td style="text-align: right; font-weight: 500;">€1.200,00</td>
+              <td style="color:#dc2626; font-weight:500;">01.05.2026</td>
+              <td><span class="tag tag-red">Überfällig</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#R-2026-087</td>
+              <td class="cell-muted">PowerGym Berlin</td>
+              <td class="cell-muted">April 2026</td>
+              <td style="text-align: right; font-weight: 500;">€2.100,00</td>
+              <td class="cell-mono">08.05.2026</td>
+              <td><span class="tag tag-green">Bezahlt</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════ -->

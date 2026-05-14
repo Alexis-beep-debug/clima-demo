@@ -1,1483 +1,478 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CleanOS — Gebäudereinigung Software</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CleanOS — Gebäudereinigung Software</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #fff; color: #1a1a1a; font-size: 13px; -webkit-font-smoothing: antialiased; }
+  .app { display: flex; height: 100vh; }
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  /* ═══ SIDEBAR — exactly Folk: white, thin border, grouped nav ═══ */
+  .sidebar { width: 220px; flex-shrink: 0; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; background: #fff; }
+  .sidebar-top { padding: 12px 12px 8px; display: flex; align-items: center; gap: 8px; }
+  .s-logo { width: 22px; height: 22px; background: #1a1a1a; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 10px; }
+  .s-brand { font-weight: 600; font-size: 13px; color: #1a1a1a; }
+  .s-nav { flex: 1; padding: 4px 8px; overflow-y: auto; }
+  .s-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 5px; color: #666; font-size: 13px; cursor: pointer; }
+  .s-item:hover { background: #f5f5f5; color: #1a1a1a; }
+  .s-item.active { background: #f0f0f0; color: #1a1a1a; font-weight: 500; }
+  .s-icon { width: 15px; height: 15px; opacity: 0.45; flex-shrink: 0; }
+  .s-item.active .s-icon { opacity: 0.7; }
+  .s-badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 8px; }
+  .s-label { font-size: 10.5px; color: #aaa; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; padding: 12px 8px 4px; }
+  .s-count { margin-left: auto; font-size: 11px; color: #bbb; font-weight: 400; }
+  .s-bottom { border-top: 1px solid #eee; margin: 0 12px; padding: 10px 0; }
+  .s-user { display: flex; align-items: center; gap: 8px; padding: 4px; }
+  .s-avatar { width: 26px; height: 26px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: #888; }
+  .s-uname { font-size: 12px; font-weight: 500; }
+  .s-urole { font-size: 10.5px; color: #aaa; }
 
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    clima: {
-                        orange: '#fb8e28',
-                        'orange-hover': '#e47d1e',
-                        'orange-light': '#fef3e5',
-                        'orange-subtle': '#fff8f0',
-                        green: '#82b735',
-                        'green-light': '#f0f7e2',
-                        'green-subtle': '#f7faf0',
-                    },
-                    page: '#faf8f5',
-                    surface: '#fefdfb',
-                    sidebar: '#1e1914',
-                    'sidebar-hover': '#2d241c',
-                    'sidebar-active': '#3a2f25',
-                    ink: {
-                        DEFAULT: '#2d2219',
-                        secondary: '#7a6a58',
-                        tertiary: '#a89880',
-                        inverse: '#faf8f5',
-                    },
-                    border: {
-                        DEFAULT: '#ede8e1',
-                        subtle: '#f5f1eb',
-                    },
-                    danger: {
-                        DEFAULT: '#c4421a',
-                        light: '#fef0ec',
-                    },
-                },
-                fontFamily: {
-                    display: ['"Bricolage Grotesque"', 'serif'],
-                    body: ['Figtree', 'sans-serif'],
-                },
-            }
-        }
-    }
-    </script>
+  /* ═══ MAIN ═══ */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  /* Top bar — Folk: breadcrumb · actions */
+  .topbar { height: 44px; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; }
+  .bc { font-size: 12.5px; color: #aaa; display: flex; align-items: center; gap: 5px; }
+  .bc strong { color: #1a1a1a; font-weight: 500; }
+  .bc-sep { color: #ccc; }
+  .tb-right { display: flex; align-items: center; gap: 8px; }
+  .tb-btn { height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #e0e0e0; background: #fff; font-size: 12px; font-family: inherit; color: #555; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .tb-btn:hover { background: #fafafa; border-color: #d0d0d0; }
+  .tb-search { border: 1px solid #e0e0e0; border-radius: 6px; padding: 5px 10px 5px 28px; font-size: 12px; width: 180px; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23bbb' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") 8px center no-repeat; outline: none; font-family: inherit; color: #1a1a1a; }
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  /* Content */
+  .content { flex: 1; overflow-y: auto; }
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Figtree', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Bricolage Grotesque', serif; }
+  /* Page header — Folk: big title + action buttons on same line */
+  .page-head { padding: 20px 24px 0; }
+  .page-row { display: flex; align-items: baseline; justify-content: space-between; }
+  .page-title { font-size: 26px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; }
+  .page-actions { display: flex; gap: 6px; }
+  .btn-primary { height: 32px; padding: 0 14px; border-radius: 6px; border: none; background: #1a1a1a; color: #fff; font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary { height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #e0e0e0; background: #fff; font-size: 12.5px; font-weight: 400; font-family: inherit; color: #555; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .btn-secondary:hover { background: #fafafa; }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #ede8e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #d4cdc3; }
+  /* Subtle inline stats — NOT hero KPIs, just a quiet info row */
+  .stats-row { display: flex; gap: 20px; padding: 12px 24px 0; }
+  .stat { font-size: 12px; color: #999; }
+  .stat b { color: #1a1a1a; font-weight: 600; }
+  .stat .up { color: #22c55e; font-weight: 500; }
+  .stat .warn { color: #f59e0b; font-weight: 500; }
+  .stat .down { color: #ef4444; font-weight: 500; }
 
-        /* View transitions */
-        .view { animation: viewIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes viewIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+  /* Tabs — Folk uses view switcher */
+  .tabs { display: flex; gap: 0; padding: 14px 24px 0; border-bottom: 1px solid #eee; }
+  .tab { padding: 6px 12px 10px; font-size: 12.5px; color: #999; font-weight: 400; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab:hover { color: #666; }
+  .tab.active { color: #1a1a1a; font-weight: 500; border-bottom-color: #1a1a1a; }
 
-        /* Stagger load animation */
-        .stagger { opacity: 0; animation: staggerIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes staggerIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+  /* Table — Folk style: no borders, clean hover, full width */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl th { text-align: left; padding: 8px 24px; font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; }
+  .tbl td { padding: 10px 24px; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+  .tbl tr:hover td { background: #fafafa; }
+  .tbl tr:last-child td { border-bottom: none; }
 
-        /* Nav item hover */
-        .nav-item { transition: all 0.15s ease; }
-        .nav-item:hover { background: #2d241c; }
-        .nav-item.active { background: #3a2f25; }
-        .nav-item.active .nav-label { color: #fb8e28; font-weight: 600; }
-        .nav-item.active .nav-icon { color: #fb8e28; }
+  /* Cell content */
+  .cell-main { font-weight: 500; color: #1a1a1a; }
+  .cell-sub { font-size: 11.5px; color: #aaa; margin-top: 1px; }
+  .cell-muted { color: #999; }
+  .cell-mono { font-variant-numeric: tabular-nums; color: #999; }
 
-        /* Table row hover */
-        .table-row { transition: background 0.1s ease; }
-        .table-row:hover { background: #faf8f5; }
+  /* Badges — Folk style: small, subtle, rectangular-ish */
+  .tag { font-size: 10.5px; font-weight: 500; padding: 2px 7px; border-radius: 4px; display: inline-block; }
+  .tag-green { background: #dcfce7; color: #15803d; }
+  .tag-yellow { background: #fef9c3; color: #a16207; }
+  .tag-red { background: #fee2e2; color: #dc2626; }
+  .tag-blue { background: #dbeafe; color: #1d4ed8; }
+  .tag-gray { background: #f3f4f6; color: #6b7280; }
+  .tag-orange { background: #ffedd5; color: #c2410c; }
+  .tag-purple { background: #f3e8ff; color: #7c3aed; }
 
-        /* Pipeline card */
-        .pipeline-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-        .pipeline-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(45, 34, 25, 0.08); }
+  /* Dot indicator */
+  .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .dot-green { background: #22c55e; }
+  .dot-gray { background: #d4d4d4; }
+  .dot-black { background: #1a1a1a; }
+  .dot-red { background: #ef4444; }
 
-        /* Button hover */
-        .btn-primary { transition: background 0.15s ease, transform 0.1s ease; }
-        .btn-primary:hover { background: #e47d1e; }
-        .btn-primary:active { transform: scale(0.98); }
+  /* Team avatar */
+  .team-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #666; background: #f5f5f5; padding: 2px 8px 2px 6px; border-radius: 4px; }
+  .team-dot { width: 8px; height: 8px; border-radius: 2px; }
 
-        /* Badge pulse */
-        .pulse-dot { animation: pulse 2s ease-in-out infinite; }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+  /* Right panel hint (like Folk's detail slide) */
+  .toolbar-icons { display: flex; gap: 2px; }
+  .toolbar-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 5px; color: #999; cursor: pointer; }
+  .toolbar-icon:hover { background: #f0f0f0; color: #666; }
 
-        /* Schedule time marker */
-        .time-marker::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #fb8e28;
-        }
-        .time-marker.done::before { background: #82b735; }
-        .time-marker.upcoming::before { background: #ede8e1; }
+  /* ═══ ADDITIONAL — View system, Gantt, Auswertungen, etc. ═══ */
 
-        /* Calendar cell */
-        .cal-cell { transition: background 0.1s ease; }
-        .cal-cell:hover { background: #fef3e5; }
-    </style>
+  /* View visibility */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Gantt-specific (Einsatzplanung) */
+  .gantt-row { display: flex; border-bottom: 1px solid #f5f5f5; }
+  .gantt-row:last-child { border-bottom: none; }
+  .gantt-label { width: 140px; flex-shrink: 0; padding: 14px 16px; border-right: 1px solid #eee; }
+  .gantt-track { flex: 1; position: relative; min-height: 48px; padding: 6px 0; }
+  .gantt-bar { position: absolute; top: 8px; bottom: 8px; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 500; color: #fff; background: #1a1a1a; overflow: hidden; white-space: nowrap; }
+  .gantt-bar-70 { background: rgba(26,26,26,0.7); }
+  .gantt-bar-40 { background: rgba(26,26,26,0.4); }
+  .gantt-time-header { display: flex; }
+  .gantt-time-header > div { flex: 1; text-align: center; font-size: 10px; color: #aaa; padding: 6px 0; border-left: 1px solid #f0f0f0; }
+
+  /* Auswertungen chart area */
+  .chart-container { padding: 0 24px 24px; }
+  .chart-wrap { max-width: 600px; height: 200px; }
+
+  /* Analytics text rows */
+  .metric-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid #f5f5f5; }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { font-size: 13px; color: #1a1a1a; }
+  .metric-val { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+  .metric-change { font-size: 11px; margin-left: 8px; }
+
+  /* Progress bar (Auswertungen only) */
+  .pbar { display: flex; align-items: center; gap: 10px; padding: 6px 24px; }
+  .pbar-label { font-size: 12px; color: #1a1a1a; width: 140px; flex-shrink: 0; }
+  .pbar-track { flex: 1; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden; }
+  .pbar-fill { height: 100%; border-radius: 2px; }
+  .pbar-fill-green { background: #22c55e; }
+  .pbar-fill-red { background: #ef4444; }
+  .pbar-val { font-size: 11px; font-weight: 600; width: 40px; text-align: right; flex-shrink: 0; }
+
+  /* Section divider for Auswertungen */
+  .section-label { font-size: 11px; font-weight: 500; color: #aaa; text-transform: uppercase; letter-spacing: 0.3px; padding: 20px 24px 8px; }
+
+  /* Row highlights */
+  .row-active td { background: #fffbeb !important; }
+  .row-overdue td { background: #fef2f2 !important; }
+
+  /* Avatar circle */
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #888; flex-shrink: 0; }
+</style>
 </head>
+<body>
+<div class="app">
 
-<body class="bg-page font-body text-ink h-screen overflow-hidden">
-
-<div class="flex h-screen">
-
-    <!-- ═══════════════════════════════════════ SIDEBAR ═══════════════════════════════════════ -->
-    <aside class="w-60 bg-sidebar flex flex-col flex-shrink-0">
-
-        <!-- Logo -->
-        <div class="px-5 py-5 flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-clima-orange flex items-center justify-center">
-                <span class="text-white font-display font-bold text-base">C</span>
-            </div>
-            <div>
-                <div class="font-display font-bold text-ink-inverse text-base tracking-tight">CleanOS</div>
-                <div class="text-[11px] text-ink-tertiary tracking-wide uppercase">Gebäudereinigung</div>
-            </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="mx-4 border-t border-sidebar-hover"></div>
-
-        <!-- Navigation -->
-        <nav class="flex-1 px-3 py-4 space-y-0.5">
-            <button onclick="navigate('dashboard')" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="dashboard">
-                <i data-lucide="layout-dashboard" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Dashboard</span>
-            </button>
-            <button onclick="navigate('objekte')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="objekte">
-                <i data-lucide="building-2" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Objekte</span>
-            </button>
-            <button onclick="navigate('auftraege')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="auftraege">
-                <i data-lucide="clipboard-list" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Aufträge</span>
-                <span class="ml-auto bg-clima-orange text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">5</span>
-            </button>
-            <button onclick="navigate('kunden')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="kunden">
-                <i data-lucide="users" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Kunden / CRM</span>
-            </button>
-            <button onclick="navigate('mitarbeiter')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="mitarbeiter">
-                <i data-lucide="hard-hat" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Mitarbeiter</span>
-            </button>
-            <button onclick="navigate('einsatzplanung')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="einsatzplanung">
-                <i data-lucide="calendar-days" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Einsatzplanung</span>
-            </button>
-            <button onclick="navigate('rechnungen')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="rechnungen">
-                <i data-lucide="receipt" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Rechnungen</span>
-            </button>
-            <button onclick="navigate('auswertungen')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left" data-view="auswertungen">
-                <i data-lucide="bar-chart-3" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Auswertungen</span>
-            </button>
-        </nav>
-
-        <!-- Bottom section -->
-        <div class="px-3 pb-3 space-y-0.5">
-            <div class="mx-1 mb-2 border-t border-sidebar-hover"></div>
-            <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left">
-                <i data-lucide="settings" class="nav-icon w-[18px] h-[18px] text-ink-tertiary"></i>
-                <span class="nav-label text-sm text-ink-tertiary">Einstellungen</span>
-            </button>
-            <div class="flex items-center gap-3 px-3 py-3">
-                <div class="w-8 h-8 rounded-full bg-clima-orange/20 flex items-center justify-center">
-                    <span class="text-clima-orange font-semibold text-xs">ML</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="text-sm font-medium text-ink-inverse truncate">Markus Lehmann</div>
-                    <div class="text-[11px] text-ink-tertiary truncate">Geschäftsführung</div>
-                </div>
-                <i data-lucide="log-out" class="w-4 h-4 text-ink-tertiary cursor-pointer hover:text-ink-inverse transition-colors"></i>
-            </div>
-        </div>
-    </aside>
-
-    <!-- ═══════════════════════════════════════ MAIN AREA ═══════════════════════════════════════ -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-
-        <!-- Header -->
-        <header class="h-16 border-b border-border bg-surface flex items-center justify-between px-6 flex-shrink-0">
-            <div class="flex items-center gap-4">
-                <h1 id="page-title" class="font-display font-semibold text-lg text-ink">Dashboard</h1>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary"></i>
-                    <input type="text" placeholder="Suchen…" class="pl-9 pr-4 py-2 text-sm bg-page border border-border rounded-lg w-64 focus:outline-none focus:border-clima-orange/50 focus:ring-2 focus:ring-clima-orange/10 transition-all font-body">
-                </div>
-                <button class="relative p-2 rounded-lg hover:bg-page transition-colors">
-                    <i data-lucide="bell" class="w-[18px] h-[18px] text-ink-secondary"></i>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-clima-orange rounded-full pulse-dot"></span>
-                </button>
-                <button class="p-2 rounded-lg hover:bg-page transition-colors">
-                    <i data-lucide="help-circle" class="w-[18px] h-[18px] text-ink-secondary"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Content -->
-        <main class="flex-1 overflow-y-auto p-6">
-
-
-            <!-- ══════════════ VIEW: DASHBOARD ══════════════ -->
-            <div id="view-dashboard" class="view">
-
-                <!-- Hero Header with KPIs -->
-                <div class="bg-surface rounded-2xl border border-border p-6 pb-5 mb-5 stagger" style="animation-delay: 0.05s">
-                    <div class="flex items-start justify-between mb-5">
-                        <div>
-                            <p class="text-ink-tertiary text-xs mb-0.5" id="dashboard-date"></p>
-                            <h2 class="font-display text-xl font-bold text-ink leading-tight" id="dashboard-greeting"></h2>
-                        </div>
-                        <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                            Neuer Auftrag
-                        </button>
-                    </div>
-                    <!-- KPI Strip -->
-                    <div class="grid grid-cols-5 gap-4">
-                        <div class="bg-clima-orange-subtle rounded-xl p-4">
-                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Monatsumsatz</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">€47.850</div>
-                            <div class="flex items-center gap-1.5 mt-1">
-                                <span class="inline-flex items-center gap-0.5 text-clima-green text-[11px] font-semibold">
-                                    <i data-lucide="trending-up" class="w-3 h-3"></i>+12,3%
-                                </span>
-                                <span class="text-ink-tertiary text-[11px]">vs. €42.600</span>
-                            </div>
-                        </div>
-                        <div class="bg-page rounded-xl p-4">
-                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Offene Posten</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">€34.200</div>
-                            <span class="text-clima-orange text-[11px] font-semibold">12 ausstehend</span>
-                        </div>
-                        <div class="bg-page rounded-xl p-4">
-                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Aufträge</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">23</div>
-                            <span class="text-danger text-[11px] font-semibold">5 überfällig</span>
-                        </div>
-                        <div class="bg-page rounded-xl p-4">
-                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Teams aktiv</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">8<span class="text-ink-tertiary text-base font-normal"> / 10</span></div>
-                            <span class="inline-flex items-center gap-1 text-clima-green text-[11px] font-semibold"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>36 im Einsatz</span>
-                        </div>
-                        <div class="bg-page rounded-xl p-4">
-                            <div class="text-ink-secondary text-[11px] font-medium uppercase tracking-wider mb-2">Qualität Ø</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">93<span class="text-ink-tertiary text-base font-normal">%</span></div>
-                            <span class="text-clima-green text-[11px] font-semibold">84 Objekte</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart + Schedule + Status — dense 3-column -->
-                <div class="grid grid-cols-12 gap-4 mb-4">
-                    <!-- Revenue Chart -->
-                    <div class="col-span-5 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.1s">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-display font-semibold text-sm text-ink">Umsatzentwicklung</h3>
-                            <div class="flex items-center gap-0.5 text-[11px]">
-                                <button class="px-2 py-1 rounded bg-clima-orange-light text-clima-orange font-semibold">6M</button>
-                                <button class="px-2 py-1 rounded text-ink-tertiary hover:bg-page transition-colors">12M</button>
-                            </div>
-                        </div>
-                        <div style="height: 220px;"><canvas id="revenueChart"></canvas></div>
-                    </div>
-
-                    <!-- Today's Schedule -->
-                    <div class="col-span-4 bg-surface rounded-xl p-5 border border-border stagger" style="animation-delay: 0.15s">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-display font-semibold text-sm text-ink">Heutige Einsätze</h3>
-                            <span class="text-[11px] text-clima-orange font-semibold bg-clima-orange-light px-2 py-0.5 rounded-full">6 geplant</span>
-                        </div>
-                        <div class="space-y-2.5">
-                            <div class="relative pl-5 time-marker done">
-                                <div class="flex items-center justify-between">
-                                    <div><div class="text-[13px] font-medium text-ink">Bürokomplex Mitte</div><div class="text-[11px] text-ink-tertiary">Team A · 4P · Unterhalt</div></div>
-                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">07:00</span>
-                                </div>
-                            </div>
-                            <div class="relative pl-5 time-marker done">
-                                <div class="flex items-center justify-between">
-                                    <div><div class="text-[13px] font-medium text-ink">Arztpraxis Dr. Weber</div><div class="text-[11px] text-ink-tertiary">Team B · 2P · Grund</div></div>
-                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">08:30</span>
-                                </div>
-                            </div>
-                            <div class="relative pl-5 time-marker">
-                                <div class="flex items-center justify-between">
-                                    <div><div class="text-[13px] font-medium text-ink">CityMall</div><div class="text-[11px] text-ink-tertiary">Team C · 5P · Unterhalt</div></div>
-                                    <span class="text-[11px] text-clima-orange font-semibold tabular-nums">09:00</span>
-                                </div>
-                            </div>
-                            <div class="relative pl-5 time-marker upcoming">
-                                <div class="flex items-center justify-between">
-                                    <div><div class="text-[13px] font-medium text-ink">Wohnanlage Parkstr.</div><div class="text-[11px] text-ink-tertiary">Team D · 3P · Treppenhaus</div></div>
-                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">11:00</span>
-                                </div>
-                            </div>
-                            <div class="relative pl-5 time-marker upcoming">
-                                <div class="flex items-center justify-between">
-                                    <div><div class="text-[13px] font-medium text-ink">Hotel Residenz</div><div class="text-[11px] text-ink-tertiary">Team E · 6P · Zimmer</div></div>
-                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">14:00</span>
-                                </div>
-                            </div>
-                            <div class="relative pl-5 time-marker upcoming">
-                                <div class="flex items-center justify-between">
-                                    <div><div class="text-[13px] font-medium text-ink">PowerGym</div><div class="text-[11px] text-ink-tertiary">Team B · 2P · Grund</div></div>
-                                    <span class="text-[11px] text-ink-tertiary font-medium tabular-nums">16:00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Objektstatus + Activity compact -->
-                    <div class="col-span-3 space-y-4 stagger" style="animation-delay: 0.2s">
-                        <!-- Objektstatus -->
-                        <div class="bg-surface rounded-xl p-4 border border-border">
-                            <h3 class="font-display font-semibold text-sm text-ink mb-3">Objektstatus</h3>
-                            <div class="space-y-2.5">
-                                <div>
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[12px] text-ink">Büroreinigung</span>
-                                        <span class="text-[11px] text-clima-green font-semibold">94%</span>
-                                    </div>
-                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 94%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[12px] text-ink">Praxisreinigung</span>
-                                        <span class="text-[11px] text-clima-green font-semibold">98%</span>
-                                    </div>
-                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 98%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[12px] text-ink">Treppenhausrein.</span>
-                                        <span class="text-[11px] text-danger font-semibold">82%</span>
-                                    </div>
-                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-danger rounded-full" style="width: 82%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-[12px] text-ink">Hotelreinigung</span>
-                                        <span class="text-[11px] text-clima-green font-semibold">91%</span>
-                                    </div>
-                                    <div class="h-1.5 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 91%"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Recent Activity compact -->
-                        <div class="bg-surface rounded-xl p-4 border border-border">
-                            <h3 class="font-display font-semibold text-sm text-ink mb-3">Aktivitäten</h3>
-                            <div class="space-y-2.5">
-                                <div class="flex items-start gap-2.5">
-                                    <div class="w-6 h-6 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <i data-lucide="check" class="w-3 h-3 text-clima-green"></i>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <div class="text-[12px] text-ink"><span class="font-semibold">#2026-089</span> bezahlt · €8.500</div>
-                                        <div class="text-[11px] text-ink-tertiary">CityMall · 23 Min.</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-2.5">
-                                    <div class="w-6 h-6 rounded-full bg-clima-orange-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <i data-lucide="clipboard-list" class="w-3 h-3 text-clima-orange"></i>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <div class="text-[12px] text-ink"><span class="font-semibold">Sonderreinigung</span> Hotel Residenz</div>
-                                        <div class="text-[11px] text-ink-tertiary">Priorität hoch · 1 Std.</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-2.5">
-                                    <div class="w-6 h-6 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <i data-lucide="shield-check" class="w-3 h-3 text-clima-green"></i>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <div class="text-[12px] text-ink"><span class="font-semibold">QK bestanden</span> Bürokomplex 96%</div>
-                                        <div class="text-[11px] text-ink-tertiary">M. Kowalski · 2 Std.</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <!-- ══════════════ VIEW: OBJEKTE ══════════════ -->
-            <div id="view-objekte" class="view hidden">
-
-                <!-- Compact header with inline count + search -->
-                <div class="flex items-center justify-between mb-5">
-                    <div class="flex items-baseline gap-3">
-                        <h2 class="font-display text-2xl font-bold text-ink">Objekte</h2>
-                        <span class="text-ink-tertiary text-sm">84 aktiv · <span class="text-ink-secondary font-medium">6 pausiert</span></span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="relative">
-                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary"></i>
-                            <input type="text" placeholder="Objekt suchen…" class="pl-9 pr-4 py-2 text-sm bg-surface border border-border rounded-lg w-56 focus:outline-none focus:border-clima-orange/50 focus:ring-2 focus:ring-clima-orange/10 font-body">
-                        </div>
-                        <button class="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg text-ink-secondary hover:bg-surface transition-colors">
-                            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
-                            Filter
-                        </button>
-                        <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                            Neues Objekt
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-border">
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Objekt</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Typ</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Intervall</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Nächster Einsatz</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Team</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Status</th>
-                                <th class="w-10"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Bürokomplex Alexanderplatz</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Alexanderstr. 12, 10178 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Büroreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Täglich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Mo, 12.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team A</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Arztpraxis Dr. Weber</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Schönhauser Allee 45, 10435 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Praxisreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">3× wöchentlich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Mo, 12.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team B</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Einkaufszentrum CityMall</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Friedrichstr. 88, 10117 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Unterhaltsreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Täglich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Mo, 12.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team C</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Wohnanlage Parkstraße 12–16</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Parkstr. 12-16, 13187 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Treppenhausreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Wöchentlich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Mi, 14.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team D</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Hotel Residenz Berlin</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Kurfürstendamm 25, 10719 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Zimmerreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Täglich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Mo, 12.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team E</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">RA Kanzlei Müller & Partner</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Leipziger Str. 7, 10117 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Büroreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">2× wöchentlich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Di, 13.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team F</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Fitnessstudio PowerGym</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Torstr. 99, 10119 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Grundreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">3× wöchentlich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">Mo, 12.05.</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Team B</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full"></span>Aktiv</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3.5 px-5">
-                                    <div class="font-medium text-ink">Schule am Stadtpark</div>
-                                    <div class="text-xs text-ink-tertiary mt-0.5">Greifswalder Str. 30, 10405 Berlin</div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Schulreinigung</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Täglich</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">—</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">—</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-tertiary bg-page px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 bg-ink-tertiary rounded-full"></span>Pausiert</span></td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="flex items-center justify-between mt-4 text-sm text-ink-tertiary">
-                    <span>Zeige 1–8 von 84 Objekten</span>
-                    <div class="flex items-center gap-1">
-                        <button class="px-3 py-1.5 rounded-md border border-border hover:bg-surface transition-colors">Zurück</button>
-                        <button class="px-3 py-1.5 rounded-md bg-clima-orange text-white font-medium">1</button>
-                        <button class="px-3 py-1.5 rounded-md border border-border hover:bg-surface transition-colors">2</button>
-                        <button class="px-3 py-1.5 rounded-md border border-border hover:bg-surface transition-colors">3</button>
-                        <span class="px-2">…</span>
-                        <button class="px-3 py-1.5 rounded-md border border-border hover:bg-surface transition-colors">11</button>
-                        <button class="px-3 py-1.5 rounded-md border border-border hover:bg-surface transition-colors">Weiter</button>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ══════════════ VIEW: KUNDEN / CRM ══════════════ -->
-            <div id="view-kunden" class="view hidden">
-
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-baseline gap-4">
-                        <h2 class="font-display text-2xl font-bold text-ink">Kunden</h2>
-                        <span class="font-display text-lg font-semibold text-clima-green">€142.800<span class="text-ink-tertiary text-sm font-normal"> /Monat</span></span>
-                        <span class="text-ink-tertiary text-sm">· 47 aktiv</span>
-                    </div>
-                    <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        Neuer Kunde
-                    </button>
-                </div>
-
-                <!-- Pipeline Funnel — proportional segments -->
-                <div class="flex gap-1 mb-6 h-[72px]">
-                    <div class="flex-[3] bg-clima-orange-subtle rounded-l-xl px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-medium text-ink-secondary uppercase tracking-wider">Anfrage</span>
-                        <div class="text-right">
-                            <div class="font-display text-lg font-bold text-ink leading-tight">3</div>
-                            <div class="text-[10px] text-ink-tertiary">€4.200</div>
-                        </div>
-                    </div>
-                    <div class="flex-[5] bg-border-subtle px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-medium text-ink-tertiary uppercase tracking-wider">Besichtigung</span>
-                        <div class="text-right">
-                            <div class="font-display text-lg font-bold text-ink leading-tight">5</div>
-                            <div class="text-[10px] text-ink-tertiary">€8.900</div>
-                        </div>
-                    </div>
-                    <div class="flex-[7] bg-clima-orange-light px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-semibold text-clima-orange uppercase tracking-wider">Angebot</span>
-                        <div class="text-right">
-                            <div class="font-display text-lg font-bold text-clima-orange leading-tight">7</div>
-                            <div class="text-[10px] text-ink-tertiary">€15.300</div>
-                        </div>
-                    </div>
-                    <div class="flex-[2] bg-clima-green-subtle px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-medium text-ink-secondary uppercase tracking-wider truncate mr-2">Verhandl.</span>
-                        <div class="text-right flex-shrink-0">
-                            <div class="font-display text-lg font-bold text-ink leading-tight">2</div>
-                            <div class="text-[10px] text-ink-tertiary">€6.800</div>
-                        </div>
-                    </div>
-                    <div class="flex-[8] bg-clima-green-light rounded-r-xl px-4 flex items-center justify-between min-w-0">
-                        <span class="text-[11px] font-semibold text-clima-green uppercase tracking-wider">Gewonnen</span>
-                        <div class="text-right">
-                            <div class="font-display text-lg font-bold text-clima-green leading-tight">8</div>
-                            <div class="text-[10px] text-ink-tertiary">€22.400/Mo</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Customer Table -->
-                <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                    <div class="flex items-center justify-between px-5 py-3 border-b border-border">
-                        <div class="flex items-center gap-2">
-                            <button class="px-3 py-1.5 rounded-md bg-clima-orange-light text-clima-orange text-xs font-semibold">Alle</button>
-                            <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Anfrage</button>
-                            <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Angebot</button>
-                            <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Verhandlung</button>
-                            <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Gewonnen</button>
-                        </div>
-                        <div class="relative">
-                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary"></i>
-                            <input type="text" placeholder="Kunde suchen…" class="pl-9 pr-4 py-1.5 text-sm bg-page border border-border rounded-lg w-48 focus:outline-none focus:border-clima-orange/50 font-body">
-                        </div>
-                    </div>
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-border">
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Kunde</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Typ</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Vertragswert</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Phase</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Letzter Kontakt</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Nächste Aktion</th>
-                                <th class="w-10"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">CM</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">CityMall GmbH</div>
-                                            <div class="text-xs text-ink-tertiary">Thomas Richter · Facility Manager</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Großkunde</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€8.500/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Gewonnen</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">08.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">QK-Bericht senden</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">HR</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">Hotel Residenz Berlin</div>
-                                            <div class="text-xs text-ink-tertiary">Sandra Hoffmann · Hoteldirektorin</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Hotelkunde</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€12.000/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Gewonnen</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">09.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">Vertragsverlängerung</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">WB</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">WohnBau AG</div>
-                                            <div class="text-xs text-ink-tertiary">Klaus Bergmann · Hausverwaltung</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Hausverwaltung</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€3.400/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Gewonnen</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">06.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">Neue Objekte besprechen</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">MP</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">Müller & Partner RA</div>
-                                            <div class="text-xs text-ink-tertiary">Dr. Claudia Müller · Senior Partner</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Bürokunde</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€850/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-orange bg-clima-orange-light px-2.5 py-1 rounded-full">Angebot</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">10.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">Angebot nachfassen</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">DW</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">Dr. med. Weber</div>
-                                            <div class="text-xs text-ink-tertiary">Dr. Michael Weber · Praxisinhaber</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Praxiskunde</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€1.200/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Gewonnen</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">07.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">Monatsabrechnung</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">PG</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">PowerGym Berlin</div>
-                                            <div class="text-xs text-ink-tertiary">Markus Stein · Betriebsleiter</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Fitnessstudio</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€2.100/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-secondary bg-page px-2.5 py-1 rounded-full">Verhandlung</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">09.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">Besichtigung Dienstag</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3.5 px-5">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-clima-orange/10 flex items-center justify-center flex-shrink-0">
-                                            <span class="text-clima-orange text-xs font-bold">SP</span>
-                                        </div>
-                                        <div>
-                                            <div class="font-medium text-ink">Stadtpark Grundschule</div>
-                                            <div class="text-xs text-ink-tertiary">Frau Lehmann · Schulleitung</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Bildungseinr.</td>
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">€3.800/Mo</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-ink-secondary bg-page px-2.5 py-1 rounded-full">Anfrage</span></td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">10.05.2026</td>
-                                <td class="py-3.5 px-5 text-ink-secondary text-xs">Erstgespräch planen</td>
-                                <td class="py-3.5 px-2"><i data-lucide="more-horizontal" class="w-4 h-4 text-ink-tertiary cursor-pointer"></i></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-            <!-- ══════════════ VIEW: AUFTRÄGE — Kanban ══════════════ -->
-            <div id="view-auftraege" class="view hidden">
-                <!-- Header: tabs statt h2+subtitle -->
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-1">
-                        <button class="px-4 py-2 rounded-lg text-sm font-semibold bg-clima-orange text-white">Alle (23)</button>
-                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-ink-secondary hover:bg-page transition-colors">Überfällig (5)</button>
-                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-ink-secondary hover:bg-page transition-colors">Heute</button>
-                    </div>
-                    <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        Neuer Auftrag
-                    </button>
-                </div>
-
-                <!-- Kanban Board -->
-                <div class="grid grid-cols-3 gap-4">
-                    <!-- Column: Geplant -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-2.5 h-2.5 rounded-full bg-ink-tertiary/40"></span>
-                            <span class="text-sm font-semibold text-ink">Geplant</span>
-                            <span class="text-xs text-ink-tertiary">4</span>
-                        </div>
-                        <div class="space-y-2.5">
-                            <div class="bg-surface rounded-xl border border-border p-4 pipeline-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-medium text-ink-tertiary tabular-nums">#2026-046</span>
-                                    <span class="text-[11px] text-ink-tertiary tabular-nums">12.05.</span>
-                                </div>
-                                <div class="font-medium text-sm text-ink mb-1">Grundreinigung</div>
-                                <div class="text-xs text-ink-tertiary">CityMall GmbH · Team C</div>
-                            </div>
-                            <div class="bg-surface rounded-xl border border-border p-4 pipeline-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-medium text-ink-tertiary tabular-nums">#2026-044</span>
-                                    <span class="text-[11px] text-ink-tertiary tabular-nums">13.05.</span>
-                                </div>
-                                <div class="font-medium text-sm text-ink mb-1">Büroreinigung</div>
-                                <div class="text-xs text-ink-tertiary">Kanzlei Müller · Team F</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Column: In Arbeit -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-2.5 h-2.5 rounded-full bg-clima-orange"></span>
-                            <span class="text-sm font-semibold text-ink">In Arbeit</span>
-                            <span class="text-xs text-ink-tertiary">1</span>
-                        </div>
-                        <div class="space-y-2.5">
-                            <div class="bg-clima-orange-subtle rounded-xl border border-clima-orange/20 p-4 pipeline-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-medium text-clima-orange tabular-nums">#2026-047</span>
-                                    <span class="text-[11px] text-clima-orange font-semibold">Heute</span>
-                                </div>
-                                <div class="font-medium text-sm text-ink mb-1">Sonderreinigung Konferenzraum</div>
-                                <div class="text-xs text-ink-tertiary">Hotel Residenz · Team E</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Column: Überfällig + Abgeschlossen -->
-                    <div>
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-2.5 h-2.5 rounded-full bg-danger"></span>
-                            <span class="text-sm font-semibold text-ink">Überfällig</span>
-                            <span class="text-xs text-danger font-semibold">1</span>
-                        </div>
-                        <div class="space-y-2.5">
-                            <div class="bg-danger-light rounded-xl border border-danger/15 p-4 pipeline-card">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-medium text-danger tabular-nums">#2026-045</span>
-                                    <span class="text-[11px] text-danger font-semibold">08.05.</span>
-                                </div>
-                                <div class="font-medium text-sm text-ink mb-1">Fensterreinigung</div>
-                                <div class="text-xs text-ink-tertiary">WohnBau AG · Team D</div>
-                            </div>
-                        </div>
-                        <!-- Abgeschlossen underneath -->
-                        <div class="flex items-center gap-2 mb-3 mt-5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-clima-green"></span>
-                            <span class="text-sm font-semibold text-ink">Abgeschlossen</span>
-                            <span class="text-xs text-ink-tertiary">1</span>
-                        </div>
-                        <div class="space-y-2.5">
-                            <div class="bg-clima-green-subtle rounded-xl border border-clima-green/15 p-4 pipeline-card opacity-70">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-medium text-ink-tertiary tabular-nums">#2026-043</span>
-                                    <span class="text-[11px] text-ink-tertiary tabular-nums">14.05.</span>
-                                </div>
-                                <div class="font-medium text-sm text-ink mb-1">Grundreinigung</div>
-                                <div class="text-xs text-ink-tertiary">PowerGym Berlin · Team B</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ══════════════ VIEW: MITARBEITER ══════════════ -->
-            <div id="view-mitarbeiter" class="view hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-baseline gap-3">
-                        <h2 class="font-display text-2xl font-bold text-ink">Mitarbeiter</h2>
-                        <span class="inline-flex items-center gap-1.5 text-clima-green text-sm font-medium"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>36 im Einsatz</span>
-                        <span class="text-ink-tertiary text-sm">/ 42 gesamt · 10 Teams</span>
-                    </div>
-                    <button class="flex items-center gap-2 px-4 py-2 text-sm border border-border rounded-lg text-ink-secondary font-medium hover:bg-surface transition-colors">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        Mitarbeiter anlegen
-                    </button>
-                </div>
-
-                <!-- Team-grouped list -->
-                <div class="space-y-6">
-                    <!-- Team A -->
-                    <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <h3 class="font-display font-semibold text-sm text-ink">Team A</h3>
-                            <span class="text-xs text-ink-tertiary">· 4 Personen · Bürokomplex Mitte</span>
-                            <span class="ml-auto inline-flex items-center gap-1.5 text-[11px] font-medium text-clima-green bg-clima-green-light px-2 py-0.5 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>Im Einsatz</span>
-                        </div>
-                        <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                            <div class="flex items-center px-5 py-3 border-b border-border-subtle">
-                                <div class="w-7 h-7 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0"><span class="text-clima-green font-bold text-[10px]">MK</span></div>
-                                <div class="ml-3 min-w-0 w-44"><div class="font-medium text-sm text-ink">Maria Kowalski</div><div class="text-[11px] text-ink-tertiary">Teamleiterin</div></div>
-                                <div class="text-xs text-ink-tertiary w-24">8 Objekte</div>
-                                <div class="text-xs text-ink-tertiary w-24">38,5 Std./Wo</div>
-                                <div class="text-xs text-ink-tertiary w-24">Seit 03/2022</div>
-                                <div class="text-xs text-ink font-medium ml-auto">4,8 ★</div>
-                            </div>
-                            <div class="flex items-center px-5 py-3">
-                                <div class="w-7 h-7 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0"><span class="text-clima-green font-bold text-[10px]">AH</span></div>
-                                <div class="ml-3 min-w-0 w-44"><div class="font-medium text-sm text-ink">Ahmed Hassan</div><div class="text-[11px] text-ink-tertiary">Reinigungskraft</div></div>
-                                <div class="text-xs text-ink-tertiary w-24">5 Objekte</div>
-                                <div class="text-xs text-ink-tertiary w-24">40,0 Std./Wo</div>
-                                <div class="text-xs text-ink-tertiary w-24">Seit 08/2023</div>
-                                <div class="text-xs text-ink font-medium ml-auto">4,6 ★</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team B -->
-                    <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <h3 class="font-display font-semibold text-sm text-ink">Team B</h3>
-                            <span class="text-xs text-ink-tertiary">· 2 Personen · Dr. Weber / PowerGym</span>
-                            <span class="ml-auto inline-flex items-center gap-1.5 text-[11px] font-medium text-clima-green bg-clima-green-light px-2 py-0.5 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>Im Einsatz</span>
-                        </div>
-                        <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                            <div class="flex items-center px-5 py-3 border-b border-border-subtle">
-                                <div class="w-7 h-7 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0"><span class="text-clima-green font-bold text-[10px]">TB</span></div>
-                                <div class="ml-3 min-w-0 w-44"><div class="font-medium text-sm text-ink">Thomas Bergmann</div><div class="text-[11px] text-ink-tertiary">Teamleiter</div></div>
-                                <div class="text-xs text-ink-tertiary w-24">6 Objekte</div>
-                                <div class="text-xs text-ink-tertiary w-24">39,0 Std./Wo</div>
-                                <div class="text-xs text-ink-tertiary w-24">Seit 01/2021</div>
-                                <div class="text-xs text-ink font-medium ml-auto">4,9 ★</div>
-                            </div>
-                            <div class="flex items-center px-5 py-3">
-                                <div class="w-7 h-7 rounded-full bg-page flex items-center justify-center flex-shrink-0"><span class="text-ink-tertiary font-bold text-[10px]">AP</span></div>
-                                <div class="ml-3 min-w-0 w-44"><div class="font-medium text-sm text-ink">Anna Petrova</div><div class="text-[11px] text-ink-tertiary">Reinigungskraft</div></div>
-                                <div class="text-xs text-ink-tertiary w-24">4 Objekte</div>
-                                <div class="text-xs text-ink-tertiary w-24">32,0 Std./Wo</div>
-                                <div class="text-xs text-ink-tertiary w-24">Seit 11/2023</div>
-                                <div class="text-xs text-ink font-medium ml-auto">4,5 ★</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team C -->
-                    <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <h3 class="font-display font-semibold text-sm text-ink">Team C</h3>
-                            <span class="text-xs text-ink-tertiary">· 5 Personen · CityMall</span>
-                            <span class="ml-auto inline-flex items-center gap-1.5 text-[11px] font-medium text-clima-green bg-clima-green-light px-2 py-0.5 rounded-full"><span class="w-1.5 h-1.5 bg-clima-green rounded-full pulse-dot"></span>Im Einsatz</span>
-                        </div>
-                        <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                            <div class="flex items-center px-5 py-3 border-b border-border-subtle">
-                                <div class="w-7 h-7 rounded-full bg-clima-green-light flex items-center justify-center flex-shrink-0"><span class="text-clima-green font-bold text-[10px]">LF</span></div>
-                                <div class="ml-3 min-w-0 w-44"><div class="font-medium text-sm text-ink">Luis Fernandez</div><div class="text-[11px] text-ink-tertiary">Teamleiter</div></div>
-                                <div class="text-xs text-ink-tertiary w-24">7 Objekte</div>
-                                <div class="text-xs text-ink-tertiary w-24">40,0 Std./Wo</div>
-                                <div class="text-xs text-ink-tertiary w-24">Seit 06/2022</div>
-                                <div class="text-xs text-ink font-medium ml-auto">4,7 ★</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team D -->
-                    <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <h3 class="font-display font-semibold text-sm text-ink">Team D</h3>
-                            <span class="text-xs text-ink-tertiary">· 3 Personen · Wohnanlage / Hotel</span>
-                            <span class="ml-auto inline-flex items-center gap-1.5 text-[11px] font-medium text-clima-orange bg-clima-orange-light px-2 py-0.5 rounded-full">1 im Urlaub</span>
-                        </div>
-                        <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                            <div class="flex items-center px-5 py-3">
-                                <div class="w-7 h-7 rounded-full bg-clima-orange-light flex items-center justify-center flex-shrink-0"><span class="text-clima-orange font-bold text-[10px]">SK</span></div>
-                                <div class="ml-3 min-w-0 w-44"><div class="font-medium text-sm text-ink">Sarah Krüger</div><div class="text-[11px] text-ink-tertiary">Reinigungskraft</div></div>
-                                <div class="text-xs text-ink-tertiary w-24">3 Objekte</div>
-                                <div class="text-xs text-ink-tertiary w-24">25,0 Std./Wo</div>
-                                <div class="text-xs text-ink-tertiary w-24">Seit 03/2024</div>
-                                <div class="text-xs text-ink font-medium ml-auto">4,4 ★</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ══════════════ VIEW: EINSATZPLANUNG ══════════════ -->
-            <div id="view-einsatzplanung" class="view hidden">
-                <div class="flex items-end justify-between mb-6">
-                    <div>
-                        <h2 class="font-display text-2xl font-bold text-ink">Einsatzplanung</h2>
-                        <p class="text-ink-secondary text-sm mt-1">KW 20 · 12.–16. Mai 2026</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button class="px-3 py-2 border border-border rounded-lg text-sm text-ink-secondary hover:bg-surface transition-colors">← Vorwoche</button>
-                        <button class="px-3 py-2 bg-clima-orange-light text-clima-orange rounded-lg text-sm font-semibold">Heute</button>
-                        <button class="px-3 py-2 border border-border rounded-lg text-sm text-ink-secondary hover:bg-surface transition-colors">Nächste →</button>
-                    </div>
-                </div>
-
-                <!-- Tagesansicht: Gantt-Timeline Mo 12.05 -->
-                <div class="text-xs text-ink-tertiary mb-3 font-medium">Montag, 12. Mai 2026 — Tagesansicht</div>
-                <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                    <!-- Time axis -->
-                    <div class="flex border-b border-border">
-                        <div class="w-36 flex-shrink-0"></div>
-                        <div class="flex-1 flex">
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">06:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">08:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">10:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">12:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">14:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">16:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">18:00</div>
-                            <div class="flex-1 text-center text-[10px] text-ink-tertiary py-2.5 border-l border-border-subtle">20:00</div>
-                        </div>
-                    </div>
-                    <!-- Team A: 07:00-11:00 → left:7.14%, width:28.57% -->
-                    <div class="flex border-b border-border-subtle">
-                        <div class="w-36 flex-shrink-0 px-4 py-4 border-r border-border-subtle">
-                            <div class="font-medium text-sm text-ink">Team A</div>
-                            <div class="text-[11px] text-ink-tertiary">M. Kowalski · 4P</div>
-                        </div>
-                        <div class="flex-1 relative py-2.5 px-1" style="min-height: 52px;">
-                            <div class="absolute top-2.5 bottom-2.5 rounded-lg bg-clima-orange flex items-center px-3 text-[11px] font-semibold text-white overflow-hidden" style="left: 7.14%; width: 28.57%;">
-                                Bürokomplex Mitte · 07–11
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team B: 08:30-10:30 → left:17.86%, width:14.29% -->
-                    <div class="flex border-b border-border-subtle">
-                        <div class="w-36 flex-shrink-0 px-4 py-4 border-r border-border-subtle">
-                            <div class="font-medium text-sm text-ink">Team B</div>
-                            <div class="text-[11px] text-ink-tertiary">T. Bergmann · 2P</div>
-                        </div>
-                        <div class="flex-1 relative py-2.5 px-1" style="min-height: 52px;">
-                            <div class="absolute top-2.5 bottom-2.5 rounded-lg bg-clima-green flex items-center px-3 text-[11px] font-semibold text-white overflow-hidden" style="left: 17.86%; width: 14.29%;">
-                                Dr. Weber · 08:30
-                            </div>
-                            <div class="absolute top-2.5 bottom-2.5 rounded-lg bg-clima-orange/80 flex items-center px-3 text-[11px] font-semibold text-white overflow-hidden" style="left: 71.43%; width: 14.29%;">
-                                PowerGym · 16–18
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team C: 09:00-14:00 → left:21.43%, width:35.71% -->
-                    <div class="flex border-b border-border-subtle">
-                        <div class="w-36 flex-shrink-0 px-4 py-4 border-r border-border-subtle">
-                            <div class="font-medium text-sm text-ink">Team C</div>
-                            <div class="text-[11px] text-ink-tertiary">L. Fernandez · 5P</div>
-                        </div>
-                        <div class="flex-1 relative py-2.5 px-1" style="min-height: 52px;">
-                            <div class="absolute top-2.5 bottom-2.5 rounded-lg bg-clima-orange flex items-center px-3 text-[11px] font-semibold text-white overflow-hidden" style="left: 21.43%; width: 35.71%;">
-                                CityMall · 09–14
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team D: 11:00-14:00 → left:35.71%, width:21.43% -->
-                    <div class="flex border-b border-border-subtle">
-                        <div class="w-36 flex-shrink-0 px-4 py-4 border-r border-border-subtle">
-                            <div class="font-medium text-sm text-ink">Team D</div>
-                            <div class="text-[11px] text-ink-tertiary">P. Schulz · 3P</div>
-                        </div>
-                        <div class="flex-1 relative py-2.5 px-1" style="min-height: 52px;">
-                            <div class="absolute top-2.5 bottom-2.5 rounded-lg bg-ink-tertiary/30 flex items-center px-3 text-[11px] font-semibold text-ink overflow-hidden" style="left: 35.71%; width: 21.43%;">
-                                Wohnanlage · 11–14
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Team E: 14:00-19:00 → left:57.14%, width:35.71% -->
-                    <div class="flex">
-                        <div class="w-36 flex-shrink-0 px-4 py-4 border-r border-border-subtle">
-                            <div class="font-medium text-sm text-ink">Team E</div>
-                            <div class="text-[11px] text-ink-tertiary">J. Nowak · 6P</div>
-                        </div>
-                        <div class="flex-1 relative py-2.5 px-1" style="min-height: 52px;">
-                            <div class="absolute top-2.5 bottom-2.5 rounded-lg bg-clima-green flex items-center px-3 text-[11px] font-semibold text-white overflow-hidden" style="left: 57.14%; width: 35.71%;">
-                                Hotel Residenz · 14–19
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Legende -->
-                <div class="flex items-center gap-5 mt-3 text-[11px] text-ink-tertiary">
-                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-clima-orange"></span> Unterhaltsreinigung</div>
-                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-clima-green"></span> Spezialreinigung</div>
-                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-ink-tertiary/30"></span> Treppenhausreinigung</div>
-                </div>
-            </div>
-
-
-            <!-- ══════════════ VIEW: RECHNUNGEN ══════════════ -->
-            <div id="view-rechnungen" class="view hidden">
-                <!-- Summen-Banner statt h2+subtitle -->
-                <div class="flex items-end gap-10 mb-6">
-                    <div>
-                        <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Ausstehend</div>
-                        <div class="font-display text-3xl font-bold text-ink tracking-tight">€34.200</div>
-                    </div>
-                    <div>
-                        <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Bezahlt (Mai)</div>
-                        <div class="font-display text-xl font-bold text-clima-green tracking-tight">€10.600</div>
-                    </div>
-                    <div>
-                        <div class="text-ink-tertiary text-[11px] uppercase tracking-wider font-medium mb-1">Überfällig</div>
-                        <div class="font-display text-xl font-bold text-danger tracking-tight">€1.200</div>
-                    </div>
-                    <div class="ml-auto flex items-center gap-2">
-                        <button class="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg text-ink-secondary hover:bg-surface transition-colors">
-                            <i data-lucide="download" class="w-4 h-4"></i>
-                            Export
-                        </button>
-                        <button class="btn-primary bg-clima-orange text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                            Neue Rechnung
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-surface rounded-xl border border-border overflow-hidden">
-                    <!-- Filter tabs -->
-                    <div class="flex items-center gap-2 px-5 py-3 border-b border-border">
-                        <button class="px-3 py-1.5 rounded-md bg-clima-orange-light text-clima-orange text-xs font-semibold">Alle (12)</button>
-                        <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Offen (2)</button>
-                        <button class="px-3 py-1.5 rounded-md text-ink-tertiary text-xs hover:bg-page transition-colors">Bezahlt (2)</button>
-                        <button class="px-3 py-1.5 rounded-md text-danger text-xs font-medium hover:bg-danger-light transition-colors">Überfällig (1)</button>
-                    </div>
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-border">
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Rechnung</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Kunde</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Leistungszeitraum</th>
-                                <th class="text-right py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Betrag</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Fällig</th>
-                                <th class="text-left py-3 px-5 text-xs font-semibold text-ink-secondary uppercase tracking-wider">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">#R-2026-091</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Hotel Residenz Berlin</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">April 2026</td>
-                                <td class="py-3.5 px-5 text-right font-medium text-ink tabular-nums">€12.000,00</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">15.05.2026</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-orange bg-clima-orange-light px-2.5 py-1 rounded-full">Offen</span></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">#R-2026-090</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">WohnBau AG</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">April 2026</td>
-                                <td class="py-3.5 px-5 text-right font-medium text-ink tabular-nums">€3.400,00</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">12.05.2026</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-orange bg-clima-orange-light px-2.5 py-1 rounded-full">Offen</span></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">#R-2026-089</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">CityMall GmbH</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">April 2026</td>
-                                <td class="py-3.5 px-5 text-right font-medium text-ink tabular-nums">€8.500,00</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">10.05.2026</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Bezahlt</span></td>
-                            </tr>
-                            <tr class="table-row border-b border-border-subtle">
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">#R-2026-088</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">Dr. med. Weber</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">April 2026</td>
-                                <td class="py-3.5 px-5 text-right font-medium text-ink tabular-nums">€1.200,00</td>
-                                <td class="py-3.5 px-5 text-danger font-medium tabular-nums">01.05.2026</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-danger bg-danger-light px-2.5 py-1 rounded-full">Überfällig</span></td>
-                            </tr>
-                            <tr class="table-row">
-                                <td class="py-3.5 px-5 font-medium text-ink tabular-nums">#R-2026-087</td>
-                                <td class="py-3.5 px-5 text-ink-secondary">PowerGym Berlin</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">April 2026</td>
-                                <td class="py-3.5 px-5 text-right font-medium text-ink tabular-nums">€2.100,00</td>
-                                <td class="py-3.5 px-5 text-ink-secondary tabular-nums">08.05.2026</td>
-                                <td class="py-3.5 px-5"><span class="inline-flex items-center gap-1.5 text-xs font-medium text-clima-green bg-clima-green-light px-2.5 py-1 rounded-full">Bezahlt</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-            <!-- ══════════════ VIEW: AUSWERTUNGEN ══════════════ -->
-            <div id="view-auswertungen" class="view hidden">
-                <div class="flex items-end justify-between mb-6">
-                    <div>
-                        <h2 class="font-display text-2xl font-bold text-ink">Auswertungen</h2>
-                        <p class="text-ink-secondary text-sm mt-1">Übersicht Geschäftskennzahlen · Mai 2026</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <select class="px-3 py-2 border border-border rounded-lg text-sm text-ink-secondary bg-surface focus:outline-none font-body">
-                            <option>Mai 2026</option>
-                            <option>April 2026</option>
-                            <option>März 2026</option>
-                        </select>
-                        <button class="flex items-center gap-2 px-3 py-2 border border-border rounded-lg text-sm text-ink-secondary hover:bg-surface transition-colors">
-                            <i data-lucide="download" class="w-4 h-4"></i>
-                            Export
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Hero KPI Banner — full width, inline metrics -->
-                <div class="bg-surface rounded-xl border border-border px-8 py-6 mb-8">
-                    <div class="flex items-end gap-12">
-                        <div>
-                            <div class="text-[11px] text-ink-tertiary uppercase tracking-wider font-medium mb-1">Gesamtumsatz YTD</div>
-                            <div class="font-display text-4xl font-bold text-ink tracking-tight">€216.750</div>
-                            <div class="text-sm text-clima-green font-semibold mt-1">+18,4% ggü. Vorjahr</div>
-                        </div>
-                        <div class="h-14 w-px bg-border"></div>
-                        <div>
-                            <div class="text-[11px] text-ink-tertiary uppercase tracking-wider font-medium mb-1">Ø Marge</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">34,2%</div>
-                            <div class="text-xs text-clima-green font-medium mt-0.5">+2,1 Prozentpunkte</div>
-                        </div>
-                        <div class="h-14 w-px bg-border"></div>
-                        <div>
-                            <div class="text-[11px] text-ink-tertiary uppercase tracking-wider font-medium mb-1">Kundenzufriedenheit</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">4,7 <span class="text-lg text-ink-tertiary font-normal">/ 5</span></div>
-                            <div class="text-xs text-ink-tertiary mt-0.5">124 Bewertungen</div>
-                        </div>
-                        <div class="h-14 w-px bg-border"></div>
-                        <div>
-                            <div class="text-[11px] text-ink-tertiary uppercase tracking-wider font-medium mb-1">Personalauslastung</div>
-                            <div class="font-display text-2xl font-bold text-ink tracking-tight">87%</div>
-                            <div class="text-xs text-ink-tertiary mt-0.5">Ø 36,8 Std./Woche</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-5">
-                    <div class="bg-surface rounded-xl p-5 border border-border">
-                        <h3 class="font-display font-semibold text-base text-ink mb-4">Umsatz nach Segment</h3>
-                        <canvas id="segmentChart" height="220"></canvas>
-                    </div>
-                    <div class="bg-surface rounded-xl p-5 border border-border">
-                        <h3 class="font-display font-semibold text-base text-ink mb-4">Top-Kunden nach Umsatz</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-ink">Hotel Residenz Berlin</span>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-32 h-2 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-orange rounded-full" style="width: 100%"></div></div>
-                                    <span class="text-sm font-medium text-ink tabular-nums w-24 text-right">€12.000</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-ink">CityMall GmbH</span>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-32 h-2 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-orange rounded-full" style="width: 71%"></div></div>
-                                    <span class="text-sm font-medium text-ink tabular-nums w-24 text-right">€8.500</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-ink">WohnBau AG</span>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-32 h-2 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-orange rounded-full" style="width: 28%"></div></div>
-                                    <span class="text-sm font-medium text-ink tabular-nums w-24 text-right">€3.400</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-ink">PowerGym Berlin</span>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-32 h-2 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 18%"></div></div>
-                                    <span class="text-sm font-medium text-ink tabular-nums w-24 text-right">€2.100</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm text-ink">Dr. med. Weber</span>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-32 h-2 bg-page rounded-full overflow-hidden"><div class="h-full bg-clima-green rounded-full" style="width: 10%"></div></div>
-                                    <span class="text-sm font-medium text-ink tabular-nums w-24 text-right">€1.200</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </main>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <div class="s-logo">C</div>
+      <span class="s-brand">CleanOS</span>
     </div>
+
+    <div class="s-nav">
+      <div class="s-item" style="margin-bottom: 2px;">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        Search
+      </div>
+      <div class="s-item" style="margin-bottom: 2px;">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Notifications
+        <span class="s-badge">3</span>
+      </div>
+
+      <div class="s-label">Betrieb</div>
+      <div class="s-item active" data-view="einsaetze" onclick="navigate('einsaetze')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Heutige Einsätze
+      </div>
+      <div class="s-item" data-view="objekte" onclick="navigate('objekte')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+        Objekte
+        <span class="s-count">84</span>
+      </div>
+      <div class="s-item" data-view="auftraege" onclick="navigate('auftraege')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        Aufträge
+        <span class="s-badge">5</span>
+      </div>
+      <div class="s-item" data-view="planung" onclick="navigate('planung')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Einsatzplanung
+      </div>
+
+      <div class="s-label">Verwaltung</div>
+      <div class="s-item" data-view="kunden" onclick="navigate('kunden')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Kunden
+        <span class="s-count">47</span>
+      </div>
+      <div class="s-item" data-view="mitarbeiter" onclick="navigate('mitarbeiter')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4-4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mitarbeiter
+        <span class="s-count">42</span>
+      </div>
+      <div class="s-item" data-view="rechnungen" onclick="navigate('rechnungen')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+        Rechnungen
+      </div>
+      <div class="s-item" data-view="auswertungen" onclick="navigate('auswertungen')">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        Auswertungen
+      </div>
+
+      <div class="s-label">Einstellungen</div>
+      <div class="s-item">
+        <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        Settings &amp; members
+      </div>
+    </div>
+
+    <div class="s-bottom">
+      <div class="s-user">
+        <div class="s-avatar">ML</div>
+        <div>
+          <div class="s-uname">Markus Lehmann</div>
+          <div class="s-urole">Geschäftsführer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="bc">
+        <strong id="bc-title">Heutige Einsätze</strong>
+        <span class="bc-sep">/</span>
+        <span id="bc-date"></span>
+      </div>
+      <div class="tb-right">
+        <input class="tb-search" type="text" placeholder="Suchen…">
+        <div class="toolbar-icons">
+          <div class="toolbar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg></div>
+          <div class="toolbar-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 1: Heutige Einsätze (Landing Page) -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-einsaetze" class="view active">
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Heutige Einsätze</div>
+            <div class="page-actions">
+              <button class="btn-secondary">↓ Export</button>
+              <button class="btn-primary">+ Einsatz planen</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>6</b> Einsätze geplant · <b>8</b> Teams im Einsatz · <b>21 Std.</b> geplant · <span class="down">1 überfällig</span></div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Tagesansicht</div>
+            <div class="tab">Wochenplan</div>
+            <div class="tab">Alle Einsätze</div>
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 60px;">Zeit</th>
+              <th>Objekt</th>
+              <th>Reinigungsart</th>
+              <th>Team</th>
+              <th>Mitarbeiter</th>
+              <th>Dauer</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-mono">07:00</td>
+              <td>
+                <div class="cell-main">Bürokomplex Alexanderplatz</div>
+                <div class="cell-sub">Alexanderstr. 12, Berlin</div>
+              </td>
+              <td class="cell-muted">Unterhaltsreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#22c55e"></span>Team A</span></td>
+              <td class="cell-muted">M. Kowalski +3</td>
+              <td class="cell-mono">4 Std.</td>
+              <td><span class="tag tag-green">Erledigt</span></td>
+            </tr>
+            <tr>
+              <td class="cell-mono">08:30</td>
+              <td>
+                <div class="cell-main">Arztpraxis Dr. Weber</div>
+                <div class="cell-sub">Schönhauser Allee 45, Berlin</div>
+              </td>
+              <td class="cell-muted">Grundreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td class="cell-muted">T. Bergmann +1</td>
+              <td class="cell-mono">2 Std.</td>
+              <td><span class="tag tag-green">Erledigt</span></td>
+            </tr>
+            <tr class="row-active">
+              <td class="cell-mono" style="font-weight:600; color:#1a1a1a;">09:00</td>
+              <td>
+                <div class="cell-main">Einkaufszentrum CityMall</div>
+                <div class="cell-sub">Friedrichstr. 88, Berlin</div>
+              </td>
+              <td class="cell-muted">Unterhaltsreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#f59e0b"></span>Team C</span></td>
+              <td class="cell-muted">L. Fernandez +4</td>
+              <td class="cell-mono">5 Std.</td>
+              <td><span class="tag tag-yellow">Läuft</span></td>
+            </tr>
+            <tr>
+              <td class="cell-mono">11:00</td>
+              <td>
+                <div class="cell-main">Wohnanlage Parkstraße 12–16</div>
+                <div class="cell-sub">Parkstr. 12-16, Berlin</div>
+              </td>
+              <td class="cell-muted">Treppenhausreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#a855f7"></span>Team D</span></td>
+              <td class="cell-muted">P. Schulz +2</td>
+              <td class="cell-mono">3 Std.</td>
+              <td><span class="tag tag-gray">Geplant</span></td>
+            </tr>
+            <tr>
+              <td class="cell-mono">14:00</td>
+              <td>
+                <div class="cell-main">Hotel Residenz Berlin</div>
+                <div class="cell-sub">Kurfürstendamm 25, Berlin</div>
+              </td>
+              <td class="cell-muted">Zimmerreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#ec4899"></span>Team E</span></td>
+              <td class="cell-muted">J. Nowak +5</td>
+              <td class="cell-mono">5 Std.</td>
+              <td><span class="tag tag-gray">Geplant</span></td>
+            </tr>
+            <tr>
+              <td class="cell-mono">16:00</td>
+              <td>
+                <div class="cell-main">Fitnessstudio PowerGym</div>
+                <div class="cell-sub">Torstr. 99, Berlin</div>
+              </td>
+              <td class="cell-muted">Grundreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td class="cell-muted">T. Bergmann +1</td>
+              <td class="cell-mono">2 Std.</td>
+              <td><span class="tag tag-gray">Geplant</span></td>
+            </tr>
+            <tr class="row-overdue">
+              <td class="cell-mono" style="color:#dc2626; font-weight: 500;">Fällig</td>
+              <td>
+                <div class="cell-main">WohnBau AG — Fensterreinigung</div>
+                <div class="cell-sub">Prenzlauer Berg · seit 08.05.</div>
+              </td>
+              <td class="cell-muted">Fensterreinigung</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#a855f7"></span>Team D</span></td>
+              <td class="cell-muted">—</td>
+              <td class="cell-mono">—</td>
+              <td><span class="tag tag-red">Überfällig</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 2: Objekte -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-objekte" class="view">
+        <!-- Content added in Task 3 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 3: Aufträge -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-auftraege" class="view">
+        <!-- Content added in Task 3 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 4: Kunden -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-kunden" class="view">
+        <!-- Content added in Task 4 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 5: Mitarbeiter -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-mitarbeiter" class="view">
+        <!-- Content added in Task 4 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 6: Einsatzplanung -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-planung" class="view">
+        <!-- Content added in Task 5 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 7: Rechnungen -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-rechnungen" class="view">
+        <!-- Content added in Task 5 -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- VIEW 8: Auswertungen -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div id="view-auswertungen" class="view">
+        <!-- Content added in Task 6 -->
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════════ -->
 <script>
-    // Dynamic date + greeting
-    (function() {
-        const now = new Date();
-        const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
-        const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-        const dateEl = document.getElementById('dashboard-date');
-        const greetEl = document.getElementById('dashboard-greeting');
-        if (dateEl) dateEl.textContent = days[now.getDay()] + ', ' + now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
-        const h = now.getHours();
-        const greet = h < 12 ? 'Guten Morgen' : h < 17 ? 'Guten Tag' : 'Guten Abend';
-        if (greetEl) greetEl.textContent = greet + ', Markus';
-    })();
+  // Dynamic date
+  const d = new Date();
+  const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  document.getElementById('bc-date').textContent = days[d.getDay()] + ', ' + d.getDate() + '. ' + months[d.getMonth()] + ' ' + d.getFullYear();
 
-    // Initialize Lucide icons
+  // View titles for breadcrumb
+  const viewTitles = {
+    einsaetze: 'Heutige Einsätze',
+    objekte: 'Objekte',
+    auftraege: 'Aufträge',
+    kunden: 'Kunden',
+    mitarbeiter: 'Mitarbeiter',
+    planung: 'Einsatzplanung',
+    rechnungen: 'Rechnungen',
+    auswertungen: 'Auswertungen'
+  };
+
+  function navigate(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + viewId).classList.add('active');
+    document.querySelectorAll('.s-item[data-view]').forEach(i => i.classList.remove('active'));
+    const btn = document.querySelector('[data-view="' + viewId + '"]');
+    if (btn) btn.classList.add('active');
+    document.getElementById('bc-title').textContent = viewTitles[viewId] || viewId;
+    if (viewId === 'auswertungen' && !window._chartInit) initCharts();
+  }
+
+  // Chart.js initialization stub (filled in Task 6)
+  function initCharts() {
+    // Will be implemented when Auswertungen view is added
+  }
+
+  // Initialize Lucide icons if available
+  if (typeof lucide !== 'undefined') {
     lucide.createIcons();
-
-    // Navigation
-    const viewTitles = {
-        dashboard: 'Dashboard',
-        objekte: 'Objekte',
-        auftraege: 'Aufträge',
-        kunden: 'Kunden / CRM',
-        mitarbeiter: 'Mitarbeiter',
-        einsatzplanung: 'Einsatzplanung',
-        rechnungen: 'Rechnungen',
-        auswertungen: 'Auswertungen',
-    };
-
-    function navigate(viewId) {
-        // Hide all views
-        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-
-        // Show target view
-        const target = document.getElementById('view-' + viewId);
-        if (target) {
-            target.classList.remove('hidden');
-            // Re-trigger animation
-            target.style.animation = 'none';
-            target.offsetHeight; // reflow
-            target.style.animation = '';
-        }
-
-        // Update sidebar active state
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        const activeBtn = document.querySelector('[data-view="' + viewId + '"]');
-        if (activeBtn) activeBtn.classList.add('active');
-
-        // Update page title
-        document.getElementById('page-title').textContent = viewTitles[viewId] || viewId;
-
-        // Re-init lucide icons
-        lucide.createIcons();
-
-        // Init charts if needed
-        if (viewId === 'auswertungen' && !window.segmentChartInit) {
-            initSegmentChart();
-        }
-    }
-
-    // Revenue Chart
-    const revenueCtx = document.getElementById('revenueChart');
-    if (revenueCtx) {
-        revenueCtx.style.height = '100%';
-        new Chart(revenueCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Dez', 'Jan', 'Feb', 'Mär', 'Apr', 'Mai'],
-                datasets: [{
-                    label: 'Umsatz',
-                    data: [38200, 41500, 39800, 43100, 45600, 47850],
-                    backgroundColor: '#fb8e28',
-                    borderRadius: 6,
-                    borderSkipped: false,
-                    barPercentage: 0.6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#2d2219',
-                        titleFont: { family: 'Figtree', size: 12 },
-                        bodyFont: { family: 'Figtree', size: 13, weight: '600' },
-                        padding: 12,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return '€' + context.parsed.y.toLocaleString('de-DE');
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            font: { family: 'Figtree', size: 12 },
-                            color: '#7a6a58',
-                        },
-                        border: { display: false },
-                    },
-                    y: {
-                        grid: { color: '#f5f1eb', drawBorder: false },
-                        ticks: {
-                            font: { family: 'Figtree', size: 11 },
-                            color: '#a89880',
-                            callback: function(value) {
-                                return '€' + (value / 1000) + 'k';
-                            },
-                            maxTicksLimit: 5,
-                        },
-                        border: { display: false },
-                    }
-                }
-            }
-        });
-    }
-
-    // Segment Chart (Auswertungen)
-    function initSegmentChart() {
-        const ctx = document.getElementById('segmentChart');
-        if (!ctx) return;
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Büroreinigung', 'Hotelreinigung', 'Praxisreinigung', 'Treppenhausreinigung', 'Sonstiges'],
-                datasets: [{
-                    data: [38, 25, 15, 14, 8],
-                    backgroundColor: ['#fb8e28', '#82b735', '#e47d1e', '#c4421a', '#7a6a58'],
-                    borderWidth: 0,
-                    borderRadius: 4,
-                    spacing: 3,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '65%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: { family: 'Figtree', size: 12 },
-                            color: '#2d2219',
-                            padding: 16,
-                            usePointStyle: true,
-                            pointStyleWidth: 8,
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#2d2219',
-                        titleFont: { family: 'Figtree', size: 12 },
-                        bodyFont: { family: 'Figtree', size: 13, weight: '600' },
-                        padding: 12,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        window.segmentChartInit = true;
-    }
+  }
 </script>
-
 </body>
 </html>

@@ -386,14 +386,234 @@
       <!-- VIEW 2: Objekte -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-objekte" class="view">
-        <!-- Content added in Task 3 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Objekte</div>
+            <div class="page-actions">
+              <button class="btn-secondary">Import</button>
+              <button class="btn-secondary">Filter</button>
+              <button class="btn-primary">+ Neues Objekt</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>84</b> Objekte · <b>6</b> pausiert · <b>2</b> gekündigt</div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Alle</div>
+            <div class="tab">Aktiv</div>
+            <div class="tab">Pausiert</div>
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Objekt</th>
+              <th>Typ</th>
+              <th>Intervall</th>
+              <th>Team</th>
+              <th>Nächster Einsatz</th>
+              <th style="text-align: right;">Vertragswert</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="cell-main">Bürokomplex Alexanderplatz</div>
+                <div class="cell-sub">Alexanderstr. 12, Berlin</div>
+              </td>
+              <td class="cell-muted">Büroreinigung</td>
+              <td class="cell-muted">Täglich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#22c55e"></span>Team A</span></td>
+              <td class="cell-mono">Mo, 12.05.</td>
+              <td style="text-align: right; font-weight: 500;">€2.400/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">Arztpraxis Dr. Weber</div>
+                <div class="cell-sub">Schönhauser Allee 45</div>
+              </td>
+              <td class="cell-muted">Praxisreinigung</td>
+              <td class="cell-muted">3× wöchentlich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td class="cell-mono">Mo, 12.05.</td>
+              <td style="text-align: right; font-weight: 500;">€1.200/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">Einkaufszentrum CityMall</div>
+                <div class="cell-sub">Friedrichstr. 88</div>
+              </td>
+              <td class="cell-muted">Unterhaltsreinigung</td>
+              <td class="cell-muted">Täglich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#f59e0b"></span>Team C</span></td>
+              <td class="cell-mono">Mo, 12.05.</td>
+              <td style="text-align: right; font-weight: 500;">€8.500/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">Wohnanlage Parkstraße 12–16</div>
+                <div class="cell-sub">Parkstr. 12-16</div>
+              </td>
+              <td class="cell-muted">Treppenhausreinigung</td>
+              <td class="cell-muted">Wöchentlich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#a855f7"></span>Team D</span></td>
+              <td class="cell-mono">Mi, 14.05.</td>
+              <td style="text-align: right; font-weight: 500;">€680/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">Hotel Residenz Berlin</div>
+                <div class="cell-sub">Kurfürstendamm 25</div>
+              </td>
+              <td class="cell-muted">Zimmerreinigung</td>
+              <td class="cell-muted">Täglich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#ec4899"></span>Team E</span></td>
+              <td class="cell-mono">Mo, 12.05.</td>
+              <td style="text-align: right; font-weight: 500;">€12.000/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">RA Kanzlei Müller &amp; Partner</div>
+                <div class="cell-sub">Leipziger Str. 7</div>
+              </td>
+              <td class="cell-muted">Büroreinigung</td>
+              <td class="cell-muted">2× wöchentlich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#6366f1"></span>Team F</span></td>
+              <td class="cell-mono">Di, 13.05.</td>
+              <td style="text-align: right; font-weight: 500;">€850/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">Fitnessstudio PowerGym</div>
+                <div class="cell-sub">Torstr. 99</div>
+              </td>
+              <td class="cell-muted">Grundreinigung</td>
+              <td class="cell-muted">3× wöchentlich</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td class="cell-mono">Mo, 12.05.</td>
+              <td style="text-align: right; font-weight: 500;">€2.100/Mo</td>
+              <td><span class="tag tag-green">Aktiv</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="cell-main">Schule am Stadtpark</div>
+                <div class="cell-sub">Greifswalder Str. 30</div>
+              </td>
+              <td class="cell-muted">Schulreinigung</td>
+              <td class="cell-muted">Täglich</td>
+              <td class="cell-muted">—</td>
+              <td class="cell-mono">—</td>
+              <td style="text-align: right; font-weight: 500;">€3.200/Mo</td>
+              <td><span class="tag tag-gray">Pausiert</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════ -->
       <!-- VIEW 3: Aufträge -->
       <!-- ═══════════════════════════════════════════════════════ -->
       <div id="view-auftraege" class="view">
-        <!-- Content added in Task 3 -->
+        <div class="page-head">
+          <div class="page-row">
+            <div class="page-title">Aufträge</div>
+            <div class="page-actions">
+              <button class="btn-primary">+ Neuer Auftrag</button>
+            </div>
+          </div>
+
+          <div class="stats-row" style="padding-left: 0;">
+            <div class="stat"><b>23</b> offen · <b>18</b> in Bearbeitung · <span class="down"><b>5</b> überfällig</span></div>
+          </div>
+
+          <div class="tabs" style="padding-left: 0; margin-left: -12px;">
+            <div class="tab active">Alle</div>
+            <div class="tab">Geplant</div>
+            <div class="tab">In Arbeit</div>
+            <div class="tab">Überfällig</div>
+            <div class="tab">Abgeschlossen</div>
+          </div>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Auftrag</th>
+              <th>Kunde</th>
+              <th>Objekt</th>
+              <th>Art</th>
+              <th>Fällig</th>
+              <th>Team</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-main">#2026-047</td>
+              <td class="cell-muted">Hotel Residenz</td>
+              <td class="cell-muted">Hotel Residenz Berlin</td>
+              <td class="cell-muted">Sonderreinigung</td>
+              <td style="color:#c2410c; font-weight:600;">Heute</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#ec4899"></span>Team E</span></td>
+              <td><span class="tag tag-yellow">In Arbeit</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#2026-046</td>
+              <td class="cell-muted">CityMall GmbH</td>
+              <td class="cell-muted">CityMall</td>
+              <td class="cell-muted">Grundreinigung</td>
+              <td class="cell-mono">12.05.2026</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#f59e0b"></span>Team C</span></td>
+              <td><span class="tag tag-gray">Geplant</span></td>
+            </tr>
+            <tr class="row-overdue">
+              <td class="cell-main">#2026-045</td>
+              <td class="cell-muted">WohnBau AG</td>
+              <td class="cell-muted">Wohnanlage Parkstr.</td>
+              <td class="cell-muted">Fensterreinigung</td>
+              <td style="color:#dc2626; font-weight:500;">08.05.2026</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#a855f7"></span>Team D</span></td>
+              <td><span class="tag tag-red">Überfällig</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#2026-044</td>
+              <td class="cell-muted">Kanzlei Müller</td>
+              <td class="cell-muted">Kanzlei Büro</td>
+              <td class="cell-muted">Büroreinigung</td>
+              <td class="cell-mono">13.05.2026</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#6366f1"></span>Team F</span></td>
+              <td><span class="tag tag-gray">Geplant</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#2026-043</td>
+              <td class="cell-muted">PowerGym Berlin</td>
+              <td class="cell-muted">PowerGym</td>
+              <td class="cell-muted">Grundreinigung</td>
+              <td class="cell-mono">14.05.2026</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td><span class="tag tag-green">Abgeschlossen</span></td>
+            </tr>
+            <tr>
+              <td class="cell-main">#2026-042</td>
+              <td class="cell-muted">Dr. med. Weber</td>
+              <td class="cell-muted">Arztpraxis</td>
+              <td class="cell-muted">Desinfektion</td>
+              <td class="cell-mono">15.05.2026</td>
+              <td><span class="team-tag"><span class="team-dot" style="background:#3b82f6"></span>Team B</span></td>
+              <td><span class="tag tag-gray">Geplant</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════ -->
